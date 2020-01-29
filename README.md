@@ -12,7 +12,7 @@ The goal of this program is to create a CLI Shell that can execute programs and 
 
 ## Diagram
 
-
+https://github.com/cs100/assignment-thatteam/blob/master/images/OMT%20Diagram%20(1).docx
 
 ## Classes
 
