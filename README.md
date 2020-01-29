@@ -16,6 +16,22 @@ The goal of this program is to create a CLI Shell that can execute programs and 
 
 ## Classes
 
+## Base
+A generic abstract class meant to act as the Base of the program.
+
+## Connector
+Conector will be a super class for all connectors to inherit from: "&& || ;".
+
+## Semicolon, And, Or
+Derived classes from Connector which will act as connecting statements with consideration for execute() function.
+
+## Command
+The command themselves, but maybe with different implementation, but things along the lines of "ls" or "echo". <br>
+This will contain a `char**` that holds the command, and will be filled by `vector<string>`
+Will have CommandLine store all Commands in an array.<br>
+A public variable will be used to mark and store the root node.<br>
+The idea is a binary tree with the leaves being Command data, inteded to use inorder traversal.
+Note:Unsure if this is final implementation.
 
 
 ## Prototypes/Research
