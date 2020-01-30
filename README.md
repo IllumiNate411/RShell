@@ -36,7 +36,7 @@ Note:Unsure if this is final implementation.
 
 ## Prototypes/Research
 
-
+All of the prototype code has been included under the protoype directory. We plan to use fork and execvp in order to execute other file or commands while our shell is currently running. Waitpid can halt our current parent processes until the children processes have finished. All of this together will help us immensely when we are implementing logical connectors where we will need to know whether or not a process has been executed properly or not during run-time. The parser will let us break down user input and categorize them as commands, connectors, etc. so that we know what type of object they are and what we need to do to each individual piece. The current parser just breaks down the input string and stores each resulting string into a vector. After testing for a short while in the normal shell, I found that when using && I assumed that if one failed, neither process would execute, but I found that the other process would still be carried out. That is something that will require more investigation on our parts.
 
 ## Development and Testing Roadmap
 
