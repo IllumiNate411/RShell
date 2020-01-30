@@ -12,10 +12,12 @@ int main(int argc, char** argv) {
 	int status;
 
 	cPID = fork();
-
+	
+	//checks if we forked properly
 	if (cPID < 0) {
 		cout << "Failed to Fork to child correctly" << endl;
 	}
+	//Try to execute another file and check if it executes properly
 	else if (cPID == 0) {
 		if (execvp("./main", NULL) < 0) {
 			cout << "Execute Failed" << endl;
