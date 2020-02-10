@@ -6,7 +6,7 @@ using namespace std;
 class argtoken : public base {
         public:
                 argtoken() : base() { }
-
+		virtual void evaluate() { }
 };
 
 #endif

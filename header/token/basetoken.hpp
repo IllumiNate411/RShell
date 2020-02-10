@@ -6,7 +6,7 @@ using namespace std;
 class base {
 	public:
 		Base() { }
-
+		virtual void exector() = 0;
 };
 
 #endif

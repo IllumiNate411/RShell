@@ -6,7 +6,7 @@ using namespace std;
 class connectortoken : public base {
         public:
                 connectortoken() : base() { }
-
+		virtual void execute() { }
 };
 
 #endif
