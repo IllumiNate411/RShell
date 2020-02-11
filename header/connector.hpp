@@ -9,7 +9,7 @@ class connector{
 	public:
 	connector();
 
-	virtual bool ececute() = 0;
+	virtual bool execute() = 0;
 	void sLeft();
 	void sRight();
 	void gLeft();

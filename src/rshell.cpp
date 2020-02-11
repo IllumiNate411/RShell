@@ -60,13 +60,26 @@ vector<string> parser() {
 	return parsedInput;
 }
 
+const char* StringToCString(string str) {
+	const char* cstring;
+	cstring = str.c_str();
+
+	return cstring;
+}
+
 int main() {
 
-        vector<string> inputs = parser();
+	cout << "$ ";
 
+        vector<string> inputs = parser();
+	vector<const char *> cstringInputs;
+
+	//converts vector of strings into vector of const char* (cstrings)
 	for (unsigned i = 0; i < inputs.size(); ++i) {
-		cout << inputs.at(i) << endl;
+		cstringInputs.push_back(StringToCString(inputs.at(i)));
 	}
+
+	
 
         return 0;
 }
