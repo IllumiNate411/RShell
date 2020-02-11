@@ -2,6 +2,9 @@
 #include <string>
 #include <vector>
 
+#include "../header/connector.hpp"
+#include "../header/And.hpp"
+
 using namespace std;
 
 vector<string> parser() {
