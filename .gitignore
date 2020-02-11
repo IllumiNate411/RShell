@@ -37,6 +37,8 @@ test
 # CMake Temp Files
 CMakeCache.txt
 CMakeFiles
+cmake_install.cmake
+Makefile
 
 # Prototypes
 main
