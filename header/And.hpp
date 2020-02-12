@@ -1,10 +1,12 @@
-#include "connector.hpp"
+#include "executable.hpp"
 
-class And : public connector {
+class And : public executable {
+	protected
+		char** lhs;
+		char** rhs;
 	public:
-		And();
+		And(char** ) : executable();
 
 		bool execute();
-		std::string toString();
 };
 

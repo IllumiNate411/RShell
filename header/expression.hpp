@@ -3,7 +3,7 @@
 
 using namespace std;
 
-class expression : public connector {
+class expression : public executable {
 	protected:
 		//gives command and list of arguments for the expression
 		//the first element in the array will always be the command

@@ -1,5 +1,5 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
-ADD_EXECUTABLE(src/rshell
+ADD_EXECUTABLE(rshell
 	src/rshell.cpp
 )

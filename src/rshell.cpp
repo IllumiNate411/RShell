@@ -72,14 +72,32 @@ int main() {
 	cout << "$ ";
 
         vector<string> inputs = parser();
-	vector<const char *> cstringInputs;
+
+	const char* cstringInputs[inputs.size() + 1];
 
 	//converts vector of strings into vector of const char* (cstrings)
-	for (unsigned i = 0; i < inputs.size(); ++i) {
-		cstringInputs.push_back(StringToCString(inputs.at(i)));
-	}
+        for (unsigned i = 0; i < inputs.size(); ++i) {
+		cstringInputs[i] = StringToCString(inputs.at(i));
+        }
+        cstringInputs[inputs.size() + 1] = '\0';
+        
+	int k = 0;
+	const char tempArr[5];
 
-	
+	while (cstringInputs[k] != '\0') {
+		if(cstringInputs[k] == "&&") {
+			cout << "Create and object" << endl;
+		}
+		else if(cstringInputs[k] == "||") {
+			cout << "Create or object" << endl;
+		}
+		else if(csrtingInputs[k] == ";") {
+			cout << "Create ; object" << endl;
+		}
+		tempArr[k] = cstringInputs[k];
+
+		++k;
+	}
 
         return 0;
 }
