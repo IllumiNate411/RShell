@@ -2,10 +2,13 @@
 
 class Or : public executable {
 	protected:
-		char** lhs;
-		char** rhs;
+		const char** lhs;
+		const char** rhs;
         public:
-                Or() : executable();
+                Or(const char** A, const char** B) : executable() { 
+			lhs = A;
+			rhs = B;
+		}
 
                 bool execute();
 };

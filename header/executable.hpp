@@ -5,7 +5,6 @@ using namespace std;
 
 class executable {
         public:
-		executable() { };
 
 		virtual bool execute() = 0;
 };

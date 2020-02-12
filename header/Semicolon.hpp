@@ -1,11 +1,14 @@
 #include "executable.hpp"
 
-class And : public executable {
+class Semicolon : public executable {
 	protected:
-		char** lhs;
-		char** rhs;
+		const char** lhs;
+		const char** rhs;
         public:
-                Semicolon() : executable();
+                Semicolon(const char** A, const char** B) : executable() { 
+			lhs = A;
+			rhs = B;
+		}
 
                 bool execute();
 };

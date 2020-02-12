@@ -1,11 +1,14 @@
 #include "executable.hpp"
 
 class And : public executable {
-	protected
-		char** lhs;
-		char** rhs;
+	protected:
+		const char** lhs;
+		const char** rhs;
 	public:
-		And(char** ) : executable();
+		And(const char** A, const char** B) : executable() { 
+			lhs = A;
+			rhs = B;
+		}
 
 		bool execute();
 };

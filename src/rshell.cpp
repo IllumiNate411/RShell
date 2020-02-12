@@ -2,8 +2,11 @@
 #include <string>
 #include <vector>
 
-#include "../header/connector.hpp"
+#include "../header/executable.hpp"
+#include "../header/expression.hpp"
 #include "../header/And.hpp"
+#include "../header/Or.hpp"
+#include "../header/Semicolon.hpp"
 
 using namespace std;
 
@@ -74,28 +77,35 @@ int main() {
         vector<string> inputs = parser();
 
 	const char* cstringInputs[inputs.size() + 1];
-
+	/*
 	//converts vector of strings into vector of const char* (cstrings)
         for (unsigned i = 0; i < inputs.size(); ++i) {
 		cstringInputs[i] = StringToCString(inputs.at(i));
+		cout << cstringInputs[i] <<  endl;	
         }
-        cstringInputs[inputs.size() + 1] = '\0';
-        
+	
+        cstringInputs[inputs.size() + 1] = "\0";
+        */
+
 	int k = 0;
-	const char tempArr[5];
+	const char* tempArr[5];
+	vector<expression*  > objectVec;
 
-	while (cstringInputs[k] != '\0') {
-		if(cstringInputs[k] == "&&") {
-			cout << "Create and object" << endl;
+	for (unsigned i = 0; i < inputs.size(); ++i) {
+		if(inputs.at(i) == "&&") {
+			objectVec.push_back(new expression(tempArr));
+			k = 0;
 		}
-		else if(cstringInputs[k] == "||") {
-			cout << "Create or object" << endl;
+		else if(inputs.at(i) == "||") {
+			objectVec.push_back(new expression(tempArr));
+			k = 0;
 		}
-		else if(csrtingInputs[k] == ";") {
-			cout << "Create ; object" << endl;
-		}
-		tempArr[k] = cstringInputs[k];
-
+		else if(inputs.at(i) == ";") {
+			objectVec.push_back(new expression(tempArr));
+			k = 0;
+		}	
+		cout << inputs.at(i) << endl;
+		tempArr[k] = StringToCString(inputs.at(i));
 		++k;
 	}
 
