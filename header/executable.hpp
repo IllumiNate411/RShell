@@ -7,6 +7,7 @@ class executable {
         public:
 
 		virtual bool execute() = 0;
+		virtual void display() { };
 };
 
 #endif
