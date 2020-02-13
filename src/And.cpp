@@ -1,7 +1,8 @@
 #include "And.hpp"
 #include <iostream>
 
-And::And() {}
+And() {}
+~And() {}
 
 bool And::execute() {
 	if (right != nullptr)

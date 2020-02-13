@@ -5,6 +5,9 @@ class Semicolon : public executable {
 		executable* lhs;
 		executable* rhs;
         public:
+		Semicolon() {}
+		~Semicolon() {}
+
                 Semicolon(executable* A, executable* B) : executable() { 
 			lhs = A;
 			rhs = B;

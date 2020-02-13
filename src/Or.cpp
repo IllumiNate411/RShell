@@ -2,6 +2,7 @@
 #include <iostream>
 
 Or::Or() {}
+Or::~Or() {}
 
 bool Or::execute() {
 

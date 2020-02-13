@@ -2,6 +2,7 @@
 #include <iostream>
 
 Semicolon::Semicolon() {}
+Semicolon::~Semicolon() {}
 
 bool Semicolon::execute() {
 	if (right != nullptr)

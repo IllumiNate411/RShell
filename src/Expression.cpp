@@ -1,6 +1,12 @@
-#include "Expression.hpp"
+#include "expression.hpp"
 
-bool Expression::execute() {
+
+void expression(const char** input):exacutable(){
+
+}
+
+
+bool expression::execute() {
 	int i, status;
 	pid_t childId, endId;
 	time_t when;

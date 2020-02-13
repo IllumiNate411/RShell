@@ -5,6 +5,9 @@ class And : public executable {
 		executable* lhs;
 		executable* rhs;
 	public:
+		And() {}
+		~And() {}
+		
 		And(executable*  A, executable* B) : executable() {
 			lhs = A;
 			rhs = B;

@@ -5,6 +5,9 @@ class Or : public executable {
 		executable* lhs;
 		executable* rhs;
         public:
+		Or() {}
+		~Or() {}
+
                 Or(executable* A, executable* B) : executable() { 
 			lhs = A;
 			rhs = B;
