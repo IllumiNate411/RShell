@@ -70,62 +70,79 @@ const char* StringToCString(string str) {
 	return cstring;
 }
 
-int main() {
-
-	cout << "$ ";
-
-        vector<string> inputs = parser();
-
-	const char* cstringInputs[inputs.size() + 1];
-	/*
-	//converts vector of strings into vector of const char* (cstrings)
-        for (unsigned i = 0; i < inputs.size(); ++i) {
-		cstringInputs[i] = StringToCString(inputs.at(i));
-		cout << cstringInputs[i] <<  endl;	
-        }
-	
-        cstringInputs[inputs.size() + 1] = "\0";
-        */
-
+vector<expression* >  makeObjects(vector<string> inputs) {
 	int k = 0;
-	const char* tempArr[5];
-	vector<expression*  > objectVec;
-	vector<string> connectorOrder;
-	
-	for (unsigned i = 0; i < inputs.size(); ++i) {
-		if(inputs.at(i) == "&&") {
-			tempArr[k] = '\0';
-			objectVec.push_back(new expression(tempArr));
-			k = 0;
-			connectorOrder.push_back("&&");
-		}
-		else if(inputs.at(i) == "||") {
-			tempArr[k] = '\0';
-			objectVec.push_back(new expression(tempArr));
-			k = 0;
-			connectorOrder.push_back("||");
-		}
-		else if(inputs.at(i) == ";") {
-			tempArr[k] = '\0';
-			objectVec.push_back(new expression(tempArr));
-			connectorOrder.push_back(";");
-			k = 0;
-		}
-		else {	
-			tempArr[k] = StringToCString(inputs.at(i));
-			++k;
-		}
-	}
+        const char* tempArr[5];
+        vector<expression*  > objectVec;
+        vector<string> connectorOrder;
 
-	tempArr[k] = '\0';
+        for (unsigned i = 0; i < inputs.size(); ++i) {
+                if(inputs.at(i) == "&&") {
+                        tempArr[k] = '\0';
+                        objectVec.push_back(new expression(tempArr));
+                        k = 0;
+                }
+                else if(inputs.at(i) == "||") {
+                        tempArr[k] = '\0';
+                        objectVec.push_back(new expression(tempArr));
+                        k = 0;
+                }
+                else if(inputs.at(i) == ";") {
+                        tempArr[k] = '\0';
+                        objectVec.push_back(new expression(tempArr));
+                        k = 0;
+                }
+                else {
+                        tempArr[k] = StringToCString(inputs.at(i));
+                        ++k;
+                }
+        }
+
+        tempArr[k] = '\0';
         objectVec.push_back(new expression(tempArr));
 
-	for (unsigned i = 0; i < objectVec.size(); ++i) {
-		cout << "Object " << i << endl;
-		objectVec.at(i)->display();
-	}
+	return objectVec;
+}
 
-	
+vector<string> findConnectorOrder(vector<string> inputs) {
+	vector<string> order;
+	string curr;
+	for (unsigned i = 0; i < inputs.size(); ++i) {
+		curr = inputs.at(i);
+		if (curr == "&&") {
+			order.push_back("&&");
+		}
+		else if (curr == "||") {
+                        order.push_back("||");
+                }
+		else if (curr == ";") {
+                        order.push_back(";");
+                }
+	}
+	return order;
+}
+
+int main() {
+	vector <string> parsedStrings;
+	vector <string> connectorOrder;
+	vector <expression* > objects;
+
+	while (true) {
+		cout << "$ ";
+
+		parsedStrings = parser();
+		connectorOrder = findConnectorOrder(parsedStrings);
+		objects = makeObjects(parsedStrings);
+		
+		for (unsigned i = 0; i < objects.size(); ++i) {
+			cout << "Object " << i + 1 << endl;
+			objects.at(i)->display();
+		}
+		
+		for (unsigned i = 0; i < connectorOrder.size(); ++i) {
+			cout << connectorOrder.at(i) << endl;
+		}
+	}
 
         return 0;
 }
