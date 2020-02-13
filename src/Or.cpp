@@ -1,14 +1,12 @@
-#include "Or.hpp"
+#include "../header/Or.hpp"
 #include <iostream>
 
-Or::Or() {}
-Or::~Or() {}
 
 bool Or::execute() {
 
-	if (right != nullptr)
+	if (rhs != 0)
 		return lhs->execute() && rhs->execute();
-	if (!left->execute())
+	if (!lhs->execute())
 		cout << "No preceeding argument" << endl;
 		return false;
 }
