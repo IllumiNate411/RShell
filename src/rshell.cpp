@@ -130,20 +130,20 @@ void executeObjects(vector <executable* > objectList, vector<string> orderList) 
 		return;
 	}
 
-	int orderIterator = 0;
-	
+	executable* execTree = objectList.at(0);
 
-	for (unsigned i = 0; i < objectList.size(); ++i) {
-		if(orderList.at(orderIterator) == "&&") {
-			cout << "Make And Object" << endl;
+	for (unsigned i = 1; i < objectList.size(); ++i) {
+		if (orderList.at(i - 1) == "&&") {
+			execTree = new And(execTree, objectList.at(i));
 		}
-		else if (orderList.at(orderIterator) == "||") {
-			cout << "Make Or Object" << endl;
+		else if (orderList.at(i - 1) == "||") {
+			execTree = new Or(execTree, objectList.at(i));
 		}
-		else if (orderList.at(orderIterator) == ";") {
-			cout << "Make Semicolon Object" << endl;
-		}
+		else if (orderList.at(i - 1) == ";") {
+			execTree = new Semicolon(execTree, objectList.at(i));
+		}		
 	}
+	execTree->execute();
 	return;
 }
 
