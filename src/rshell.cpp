@@ -70,10 +70,11 @@ const char* StringToCString(string str) {
 	return cstring;
 }
 
-vector<expression* >  makeObjects(vector<string> inputs) {
+//goes through input and creates expression objects for each command/argument(s)
+vector<executable* >  makeObjects(vector<string> inputs) {
 	int k = 0;
         const char* tempArr[5];
-        vector<expression*  > objectVec;
+        vector<executable*  > objectVec;
         vector<string> connectorOrder;
 
         for (unsigned i = 0; i < inputs.size(); ++i) {
@@ -104,6 +105,7 @@ vector<expression* >  makeObjects(vector<string> inputs) {
 	return objectVec;
 }
 
+//goes through input and finds what connectors we need to use and in what order
 vector<string> findConnectorOrder(vector<string> inputs) {
 	vector<string> order;
 	string curr;
@@ -122,10 +124,33 @@ vector<string> findConnectorOrder(vector<string> inputs) {
 	return order;
 }
 
+void executeObjects(vector <executable* > objectList, vector<string> orderList) {
+	if (objectList.size() == 1) {
+		objectList.at(0)->execute();
+		return;
+	}
+
+	executable* execTree = objectList.at(0);
+
+	for (unsigned i = 1; i < objectList.size(); ++i) {
+		if (orderList.at(i - 1) == "&&") {
+			execTree = new And(execTree, objectList.at(i));
+		}
+		else if (orderList.at(i - 1) == "||") {
+			execTree = new Or(execTree, objectList.at(i));
+		}
+		else if (orderList.at(i - 1) == ";") {
+			execTree = new Semicolon(execTree, objectList.at(i));
+		}		
+	}
+	execTree->execute();
+	return;
+}
+
 int main() {
 	vector <string> parsedStrings;
 	vector <string> connectorOrder;
-	vector <expression* > objects;
+	vector <executable* > objects;
 
 	while (true) {
 		cout << "$ ";
@@ -142,6 +167,9 @@ int main() {
 		for (unsigned i = 0; i < connectorOrder.size(); ++i) {
 			cout << connectorOrder.at(i) << endl;
 		}
+
+		executeObjects(objects, connectorOrder);
+			
 	}
 
         return 0;
