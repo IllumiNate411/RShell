@@ -5,7 +5,7 @@ And::And() {}
 
 bool And::execute() {
 	if (right != nullptr)
-		return Lside->execute() && Rside->execute();
+		return lhs->execute() && rhs->execute();
 	if (!left->execute())
 		cout << "No preceeding argument" << endl;
 		return false;

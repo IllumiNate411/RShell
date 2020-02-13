@@ -2,10 +2,10 @@
 
 class And : public executable {
 	protected:
-		const char** lhs;
-		const char** rhs;
+		executable* lhs;
+		executable* rhs;
 	public:
-		And(const char** A, const char** B) : executable() { 
+		And(executable*  A, executable* B) : executable() {
 			lhs = A;
 			rhs = B;
 		}

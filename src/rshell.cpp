@@ -90,24 +90,42 @@ int main() {
 	int k = 0;
 	const char* tempArr[5];
 	vector<expression*  > objectVec;
-
+	vector<string> connectorOrder;
+	
 	for (unsigned i = 0; i < inputs.size(); ++i) {
 		if(inputs.at(i) == "&&") {
+			tempArr[k] = '\0';
 			objectVec.push_back(new expression(tempArr));
 			k = 0;
+			connectorOrder.push_back("&&");
 		}
 		else if(inputs.at(i) == "||") {
+			tempArr[k] = '\0';
 			objectVec.push_back(new expression(tempArr));
 			k = 0;
+			connectorOrder.push_back("||");
 		}
 		else if(inputs.at(i) == ";") {
+			tempArr[k] = '\0';
 			objectVec.push_back(new expression(tempArr));
+			connectorOrder.push_back(";");
 			k = 0;
-		}	
-		cout << inputs.at(i) << endl;
-		tempArr[k] = StringToCString(inputs.at(i));
-		++k;
+		}
+		else {	
+			tempArr[k] = StringToCString(inputs.at(i));
+			++k;
+		}
 	}
+
+	tempArr[k] = '\0';
+        objectVec.push_back(new expression(tempArr));
+
+	for (unsigned i = 0; i < objectVec.size(); ++i) {
+		cout << "Object " << i << endl;
+		objectVec.at(i)->display();
+	}
+
+	
 
         return 0;
 }

@@ -12,12 +12,22 @@ class expression : public executable {
 		const char** argList;
 	public:
 		expression(const char** input) : executable() {
-			argList = input;
+			argList = new const char*[5];
+			for (unsigned i = 0; i < 5; ++i) {
+				argList[i] = input[i];
+			}
 		 }
 
-		virtual bool execute(){
-		
+		virtual bool execute() { };
+		void display() {
+			int j = 0;
+        		while (argList[j] != '\0') {
+                		cout << argList[j] << endl;
+				++j;
+        		}
+        		return;
 		}
+
 };
 
 #endif
