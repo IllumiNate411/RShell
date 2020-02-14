@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
 
 using namespace std;
 
@@ -19,39 +21,51 @@ class expression : public executable {
 			argList = new const char*[5];
 			for (unsigned i = 0; i < 5; ++i) {
 				argList[i] = input[i];
+		
 			}
 		 }
 
 		virtual bool execute() {
-			/*
-        		unsigned i = 0;
-        		while(argList[i] != '\0') {
-                		cout << argList[i] << endl;
-                		++i;
-        		}
-			*/
+			
+			if (strcmp(argList[0], "exit") == 0) {
+				exit(0);
+			}
+        	
         		int status;
         		pid_t parentID;
 
 			parentID = fork();
         		if (parentID < 0) {
-                		cout << "ERROR: fork to child process has failed" << endl;
-                		return false;
+                		//cout << "ERROR: fork to child process has failed" << endl;
+          			return false;
         		}
         		else if(parentID == 0) {
                 		if (execvp(argList[0],(char**) argList) < 0) {
-                        		cout << "Error: execution failed" << endl;
-                        		return false;
-                		}
+                        		//cout << "Error: execution failed" << endl;
+                			return false;	
+				}
         		}
         		else {
                 		while (wait(&status) != parentID);
         		}
-
-        		if (status == 256) {
-                		cout << "ERROR: Invalid Command" << endl;
-                		return false;
+			/*
+			unsigned i = 0;
+        		while(argList[i] != '\0') {
+                		cout << argList[i] << endl;
+                		++i;
         		}
+			*/		
+			//cout << "Status Code: " << status << endl;
+        		if (status == 512) {
+                		//cout << "ERROR: Invalid Command" << endl;
+         
+				return false;
+        		}
+			else if(status == 0){
+				
+				//cout << "Successful: Command Executed" << endl;
+				return true;
+			}
         		return true;
 
 		}
