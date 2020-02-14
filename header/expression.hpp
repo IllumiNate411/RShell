@@ -56,7 +56,7 @@ class expression : public executable {
         		}
 			*/		
 			//cout << "Status Code: " << status << endl;
-        		if (status == 512) {
+        		if (status > 0) {
                 		perror("ERROR: Invalid Command");
          
 				return false;
@@ -66,7 +66,7 @@ class expression : public executable {
 				//cout << "Successful: Command Executed" << endl;
 				return true;
 			}
-        		return true;
+        		return false;
 
 		}
 		void display() {

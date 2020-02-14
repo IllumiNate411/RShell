@@ -13,6 +13,9 @@ ADD_EXECUTABLE(rshell
 
 ADD_EXECUTABLE(test
 	unit_test/unit_test.cpp
+	src/And.cpp
+	src/Or.cpp
+	src/Semicolon.cpp
 )
 
 TARGET_LINK_LIBRARIES(test gtest)
