@@ -12,7 +12,7 @@ ADD_EXECUTABLE(rshell
 )
 
 ADD_EXECUTABLE(test
-	src/unit_test.cpp
+	unit_test/unit_test.cpp
 )
 
 TARGET_LINK_LIBRARIES(test gtest)
