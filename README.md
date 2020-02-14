@@ -16,22 +16,17 @@ The goal of this program is to create a CLI Shell that can execute programs and 
 
 ## Classes
 
-### Base
-A generic abstract class meant to act as the Base of the program.
+### Executable
+The base class of this program, acting as an abstract class to hold the pure virtuals and references.
 
-### Connector
-Conector will be a super class for all connectors to inherit from: "&& || ;".
+### expression
+Handles execution of the arguments, and passing of the connecters And, Or, and Semicolon.
 
 ### Semicolon, And, Or
-Derived classes from Connector which will act as connecting statements with consideration for execute() function.
+Derived classes from Ececutable, all of which handle their own connecting symbols in the setup.
 
-### Command
-The command themselves, but maybe with different implementation, but things along the lines of "ls" or "echo". <br>
-This will contain a `char**` that holds the command, and will be filled by `vector<string>`
-Will have CommandLine store all Commands in an array.<br>
-A public variable will be used to mark and store the root node.<br>
-The idea is a binary tree with the leaves being Command data, inteded to use inorder traversal.
-Note:Unsure if this is final implementation.
+### rshell
+Can generally be thought of as the user input. The part of the program that handles the parsing and delivery of the input.
 
 
 ## Prototypes/Research
