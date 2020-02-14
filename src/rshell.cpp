@@ -12,8 +12,8 @@ using namespace std;
 
 vector<string> parser() {
 
-	string input;
 	vector<string> parsedInput;
+	string input;
 	getline(cin, input);
 	char curr;
 	int sz = input.size();
