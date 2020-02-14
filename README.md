@@ -12,7 +12,7 @@ The goal of this program is to create a CLI Shell that can execute programs and 
 
 ## Diagram
 
-![](images/OMT_Diagram.png)
+![](images/OMT%20Diagram.png)
 
 ## Classes
 
