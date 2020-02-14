@@ -158,7 +158,7 @@ int main() {
 		parsedStrings = parser();
 		connectorOrder = findConnectorOrder(parsedStrings);
 		objects = makeObjects(parsedStrings);
-		
+		/*
 		for (unsigned i = 0; i < objects.size(); ++i) {
 			cout << "Object " << i + 1 << endl;
 			objects.at(i)->display();
@@ -167,7 +167,7 @@ int main() {
 		for (unsigned i = 0; i < connectorOrder.size(); ++i) {
 			cout << connectorOrder.at(i) << endl;
 		}
-
+		*/
 		executeObjects(objects, connectorOrder);
 			
 	}
