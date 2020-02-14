@@ -19,6 +19,15 @@ TEST(expressionTestTrue, BasicEvaluate) {
 	EXPECT_EQ(true, ex->execute());
 }
 
+TEST(expressionTestTruels, BasicEvaluate) {
+	const char* exArr[2];
+	string str1 = "ls";
+	exArr[0] = str1.c_str();
+	exArr[1] = '\0';
+	executable* ex = new expression(exArr);
+	EXPECT_EQ(true, ex->execute());
+}
+
 TEST(expressionTestFalse, BasicEvaluate) {
         const char* exArr[3];
         string str1 = "fake";
@@ -29,17 +38,6 @@ TEST(expressionTestFalse, BasicEvaluate) {
         executable* ex = new expression(exArr);
         EXPECT_EQ(false, ex->execute());
 }
-
-/*
-TEST(exitTest, BasicEvaluate) {
-        const char* exArr[2];
-        string str = "exit";
-        exArr[0] = str.c_str();
-        exArr[1] = '\0';
-        executable* ex = new expression(exArr);
-        EXPECT_EQ(true, ex->execute());
-}
-*/
 
 TEST(orTestTrue, BasicEvaluate) {
         const char* exArr1[3];
@@ -138,3 +136,5 @@ int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
+
+//exit test is evalutated in integration.
