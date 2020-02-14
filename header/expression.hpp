@@ -36,12 +36,12 @@ class expression : public executable {
 
 			parentID = fork();
         		if (parentID < 0) {
-                		//cout << "ERROR: fork to child process has failed" << endl;
+                		perror("ERROR: fork to child process has failed");
           			return false;
         		}
         		else if(parentID == 0) {
                 		if (execvp(argList[0],(char**) argList) < 0) {
-                        		//cout << "Error: execution failed" << endl;
+                        		perror("Error: execution failed");
                 			return false;	
 				}
         		}
@@ -57,7 +57,7 @@ class expression : public executable {
 			*/		
 			//cout << "Status Code: " << status << endl;
         		if (status == 512) {
-                		//cout << "ERROR: Invalid Command" << endl;
+                		perror("ERROR: Invalid Command");
          
 				return false;
         		}
