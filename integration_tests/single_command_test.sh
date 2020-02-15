@@ -1,6 +1,9 @@
 #!/bin/sh
 
-INPUTS=("ls -a" "echo hello" "git status")
+INPUTS=("echo hello" "git status" "ls -a -l")
 
-echo "Executing .././rshell ${INPUTS[2]}"
-.././rshell ${INPUTS[2]}
+for input in "${INPUTS[@]}"
+do
+	echo "------Testing: ${input}--------"
+	${input}
+done

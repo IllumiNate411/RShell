@@ -30,8 +30,8 @@ TEST(expressionTestTruels, BasicEvaluate) {
 
 TEST(expressionTestFalse, BasicEvaluate) {
         const char* exArr[3];
-        string str1 = "fake";
-        string str2 = "command";
+        string str1 = "ls";
+        string str2 = "-j";
         exArr[0] = str1.c_str();
         exArr[1] = str2.c_str();
         exArr[2] = '\0';

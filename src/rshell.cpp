@@ -89,9 +89,11 @@ vector<executable* >  makeObjects(vector<string> inputs) {
                         k = 0;
                 }
                 else if(inputs.at(i) == ";") {
-                        tempArr[k] = '\0';
-                        objectVec.push_back(new expression(tempArr));
-                        k = 0;
+			if (i != inputs.size() - 1) { 
+                        	tempArr[k] = '\0';
+                        	objectVec.push_back(new expression(tempArr));
+                        	k = 0;
+			}
                 }
                 else {
                         tempArr[k] = StringToCString(inputs.at(i));
