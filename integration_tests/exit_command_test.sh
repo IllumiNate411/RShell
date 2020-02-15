@@ -1,7 +1,7 @@
 #!/bin/sh
 
-echo TEST_1: "echo hi; exit"
-eval "echo hi; exit"
+echo TEST_1: type "echo hi; exit"
+../rshell echo "echo hi; exit"
 
-echo TEST_2: "exit; echo hello"
-eval "exit; exho hello"
+echo TEST_2: "exit; echo hi"
+eval "exit; echo hello"
