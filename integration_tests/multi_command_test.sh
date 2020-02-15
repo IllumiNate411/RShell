@@ -1,10 +1,11 @@
 #!/bin/sh
 
-INPUTS=("git status && ls -a" "echo yippee; ls -a" "echo \"I am tired\" || ls -j")
+INPUTS=("git status && ls" "git status && echo yippee")
 
 for input in "${INPUTS[@]}"
 do
         echo "------Testing: ${input}--------"
-        ${input}
+        eval ${input}
+	
 done
 
