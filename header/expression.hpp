@@ -42,6 +42,7 @@ class expression : public executable {
         		else if(parentID == 0) {
                 		if (execvp(argList[0],(char**) argList) < 0) {
                         		perror("Error: execution failed");
+					exit(1);
                 			return false;	
 				}
         		}
