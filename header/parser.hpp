@@ -13,10 +13,12 @@ using namespace std;
 class parser {
 	public:
 		~parser();
-		void parseStrings();
+		void parseStrings(string);
 		void makeObjects();
 		void findConnectorOrder();
 		void executeObjects();
+		string stringsAt(int);
+		string connectorsAt(int);
 	protected:
 		vector <string> parsedStrings;
         	vector <string> connectorOrder;

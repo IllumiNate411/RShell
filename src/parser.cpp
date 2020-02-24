@@ -18,10 +18,8 @@ parser::~parser() {
         }
 }
 
-void parser::parseStrings() {
+void parser::parseStrings(string input) {
 
-	string input;
-	getline(cin, input);
 	char curr;
 	int sz = input.size();
 	int next;
@@ -34,10 +32,15 @@ void parser::parseStrings() {
 			parsedStrings.push_back(input.substr(i + 1, next - i - 1));
 			i = next;
 		}
+		else if (curr == '[') {
+			if (input.find(']' != string::npos)) {
+				parsedStrings.push_back("test");
+			}
+		}
 		else if (curr == '#') {
 			i = sz -1;
 		}
-		else if (curr != ' ') {
+		else if (curr != ' ' && curr != ']') {
 			//takes a substring of current position up until next space
 			if (input.find(' ', i) != string::npos) {
 				next = input.find(' ', i);
@@ -141,6 +144,15 @@ void parser::executeObjects() {
 	execTree->execute();
 	return;
 }
+
+string parser::stringsAt(int index) {
+	return parsedStrings.at(index);
+}
+
+string parser::connectorsAt(int index) {
+	return connectorOrder.at(index);
+}
+
 
 const char* parser::StringToCString(string str) {
         const char* cstring;

@@ -18,9 +18,12 @@ int main() {
         while (true) {
                 cout << "$ ";
 
+		string userStr;
+        	getline(cin, userStr);
+
 		commands = new parser();
-		
-                commands->parseStrings();
+	
+                commands->parseStrings(userStr);
                 commands->findConnectorOrder();
                 commands->makeObjects();
                 commands->executeObjects();
