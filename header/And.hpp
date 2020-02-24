@@ -1,3 +1,6 @@
+#ifndef __AND_HPP__
+#define __AND_HPP__
+
 #include "executable.hpp"
 #include <iostream>
 
@@ -15,3 +18,4 @@ class And : public executable {
 		bool execute();
 };
 
+#endif

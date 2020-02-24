@@ -1,3 +1,6 @@
+#ifndef __SEMICOLON_HPP__
+#define __SEMICOLON_HPP__
+
 #include "executable.hpp"
 
 class Semicolon : public executable {
@@ -16,3 +19,4 @@ class Semicolon : public executable {
                 bool execute();
 };
 
+#endif
