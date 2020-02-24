@@ -25,6 +25,7 @@ void parser::parseStrings(string input) {
 	char curr;
 	int sz = input.size();
 	int next;
+	bool testFlag = false;
 	
 	for (unsigned i = 0; i < sz; ++i) {
 		char curr = input.at(i);
@@ -34,15 +35,24 @@ void parser::parseStrings(string input) {
 			parsedStrings.push_back(input.substr(i + 1, next - i - 1));
 			i = next;
 		}
+		//looks for brackets that signify test
 		else if (curr == '[') {
 			if (input.find(']' != string::npos)) {
 				parsedStrings.push_back("test");
 			}
-		}
+		} 
+		//ignores comments
 		else if (curr == '#') {
 			i = sz -1;
 		}
+		//want to ignore spaces and close brackets
 		else if (curr != ' ' && curr != ']') {
+			//checks if we need to add -e after test
+			if (parsedStrings.size() >= 1) {
+				if (parsedStrings.back() == "test" && curr != '-') {
+					parsedStrings.push_back("-e");
+				}
+			}
 			//takes a substring of current position up until next space
 			if (input.find(' ', i) != string::npos) {
 				next = input.find(' ', i);

@@ -41,7 +41,7 @@ class expression : public executable {
         		}
         		else if(parentID == 0) {
                 		if (execvp(argList[0],(char**) argList) < 0) {
-                        		cout << "Error: execution failed" << endl;;
+                        		cout << "ERROR: execution failed" << endl;;
 					exit(1);
                 			return false;	
 				}
