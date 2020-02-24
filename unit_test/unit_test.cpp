@@ -10,15 +10,27 @@
 #include "../header/Semicolon.hpp"
 
 TEST(parserTest, ParserBrackets) {
-	string str = "[ -e test/file/path ] && echo \"path exists\"";
+	string str = "[ -f test/file/path ] && echo \"path exists\"";
 	parser* testParse = new parser();
 	testParse->parseStrings(str);
 	EXPECT_EQ("test", testParse->stringsAt(0));
-	EXPECT_EQ("-e", testParse->stringsAt(1));
+	EXPECT_EQ("-f", testParse->stringsAt(1));
 	EXPECT_EQ("test/file/path", testParse->stringsAt(2));
 	EXPECT_EQ("&&", testParse->stringsAt(3));
 	EXPECT_EQ("echo", testParse->stringsAt(4));
 	EXPECT_EQ("path exists", testParse->stringsAt(5));
+}
+
+TEST(parserTest, ParserBracketsWithoutFlag) {
+        string str = "[ test/file/path ] && echo \"path exists\"";
+        parser* testParse = new parser();
+        testParse->parseStrings(str);
+        EXPECT_EQ("test", testParse->stringsAt(0));
+        EXPECT_EQ("-e", testParse->stringsAt(1));
+        EXPECT_EQ("test/file/path", testParse->stringsAt(2));
+        EXPECT_EQ("&&", testParse->stringsAt(3));
+        EXPECT_EQ("echo", testParse->stringsAt(4));
+        EXPECT_EQ("path exists", testParse->stringsAt(5));
 }
 
 TEST(parserTest, ParserComments) {
