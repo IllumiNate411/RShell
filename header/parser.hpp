@@ -1,12 +1,12 @@
 #ifndef __PARSER_HPP__
 #define __PARSER_HPP__
 
-#include "../header/parser.hpp"
-#include "../header/executable.hpp"
-#include "../header/expression.hpp"
-#include "../header/And.hpp"
-#include "../header/Or.hpp"
-#include "../header/Semicolon.hpp"
+#include "executable.hpp"
+#include "expression.hpp"
+#include "test.hpp"
+#include "And.hpp"
+#include "Or.hpp"
+#include "Semicolon.hpp"
 
 using namespace std;
 

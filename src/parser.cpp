@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <stdlib.h>
+#include <string.h>
 
 #include "../header/parser.hpp"
 
@@ -70,6 +72,7 @@ void parser::parseStrings(string input) {
 			}
 		}
 	}
+	return;
 }
 
 //goes through input and creates expression objects for each command/argument(s)
@@ -78,23 +81,18 @@ void parser::makeObjects() {
         const char* tempArr[5];
 
         for (unsigned i = 0; i < parsedStrings.size(); ++i) {
-                if(parsedStrings.at(i) == "&&") {
-                        tempArr[k] = '\0';
-                        objects.push_back(new expression(tempArr));
-                        k = 0;
-                }
-                else if(parsedStrings.at(i) == "||") {
-                        tempArr[k] = '\0';
-                        objects.push_back(new expression(tempArr));
-                        k = 0;
-                }
-                else if(parsedStrings.at(i) == ";") {
-			if (i != parsedStrings.size() - 1) { 
-                        	tempArr[k] = '\0';
-                        	objects.push_back(new expression(tempArr));
-                        	k = 0;
+                if(parsedStrings.at(i) == "&&" || parsedStrings.at(i) == "||" || parsedStrings.at(i) == ";") {
+			if (i != parsedStrings.size()) {
+				tempArr[k] = '\0';
+				k = 0;
+				if (strcmp(tempArr[0], "test") == 0) {
+					objects.push_back(new test(tempArr));
+				}
+				else {
+                        		objects.push_back(new expression(tempArr));
+                		}
 			}
-                }
+		}
                 else {
                         tempArr[k] = StringToCString(parsedStrings.at(i));
                         ++k;
@@ -102,7 +100,14 @@ void parser::makeObjects() {
         }
 
         tempArr[k] = '\0';
-        objects.push_back(new expression(tempArr));
+	if (strcmp(tempArr[0], "test") == 0) {
+		objects.push_back(new test(tempArr));
+	}
+	else {
+		objects.push_back(new expression(tempArr));
+	} 
+
+	return;
 }
 
 //goes through input and finds what connectors we need to use and in what order
