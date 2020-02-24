@@ -1,3 +1,6 @@
+#ifndef __OR_HPP__
+#define __OR_HPP__
+
 #include "executable.hpp"
 
 class Or : public executable {
@@ -15,3 +18,5 @@ class Or : public executable {
 
                 bool execute();
 };
+
+#endif

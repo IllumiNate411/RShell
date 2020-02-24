@@ -9,6 +9,7 @@ ADD_EXECUTABLE(rshell
 	src/And.cpp
 	src/Or.cpp
 	src/Semicolon.cpp
+	src/parser.cpp
 )
 
 ADD_EXECUTABLE(test
@@ -16,6 +17,7 @@ ADD_EXECUTABLE(test
 	src/And.cpp
 	src/Or.cpp
 	src/Semicolon.cpp
+	src/parser.cpp
 )
 
 TARGET_LINK_LIBRARIES(test gtest)
