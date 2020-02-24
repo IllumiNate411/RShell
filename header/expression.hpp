@@ -36,12 +36,12 @@ class expression : public executable {
 
 			parentID = fork();
         		if (parentID < 0) {
-                		perror("ERROR: fork to child process has failed");
+                		cout << "ERROR: fork to child process has failed" << endl;
           			return false;
         		}
         		else if(parentID == 0) {
                 		if (execvp(argList[0],(char**) argList) < 0) {
-                        		perror("Error: execution failed");
+                        		cout << "Error: execution failed" << endl;;
 					exit(1);
                 			return false;	
 				}
@@ -58,7 +58,7 @@ class expression : public executable {
 			*/		
 			//cout << "Status Code: " << status << endl;
         		if (status > 0) {
-                		perror("ERROR: Invalid Command");
+                		cout << "ERROR: Invalid Command" << endl;
          
 				return false;
         		}
@@ -70,6 +70,7 @@ class expression : public executable {
         		return false;
 
 		}
+
 		void display() {
 			int j = 0;
         		while (argList[j] != '\0') {

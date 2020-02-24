@@ -2,11 +2,54 @@
 #include <iostream>
 #include <string>
 
+#include "../header/parser.hpp"
 #include "../header/executable.hpp"
 #include "../header/expression.hpp"
 #include "../header/And.hpp"
 #include "../header/Or.hpp"
 #include "../header/Semicolon.hpp"
+
+TEST(parserTest, ParserBrackets) {
+	string str = "[ -e test/file/path ] && echo \"path exists\"";
+	parser* testParse = new parser();
+	testParse->parseStrings(str);
+	EXPECT_EQ("test", testParse->stringsAt(0));
+	EXPECT_EQ("-e", testParse->stringsAt(1));
+	EXPECT_EQ("test/file/path", testParse->stringsAt(2));
+	EXPECT_EQ("&&", testParse->stringsAt(3));
+	EXPECT_EQ("echo", testParse->stringsAt(4));
+	EXPECT_EQ("path exists", testParse->stringsAt(5));
+}
+
+TEST(parserTest, ParserComments) {
+        string str = "echo A; ls -a #  && echo B";
+        parser* testParse = new parser();
+        testParse->parseStrings(str);
+        EXPECT_EQ("echo", testParse->stringsAt(0));
+        EXPECT_EQ("A", testParse->stringsAt(1));
+        EXPECT_EQ(";", testParse->stringsAt(2));
+        EXPECT_EQ("ls", testParse->stringsAt(3));
+        EXPECT_EQ("-a", testParse->stringsAt(4));
+}
+
+TEST(parserTest, ParserQuotes) {
+        string str = "echo \"A || echo B\"";
+        parser* testParse = new parser();
+        testParse->parseStrings(str);
+        EXPECT_EQ("echo", testParse->stringsAt(0));
+        EXPECT_EQ("A || echo B", testParse->stringsAt(1));
+}
+
+TEST(parserTest, ParserTrailingSemicolon) {
+        string str = "git status; ls -a;";
+        parser* testParse = new parser();
+        testParse->parseStrings(str);
+        EXPECT_EQ("git", testParse->stringsAt(0));
+        EXPECT_EQ("status", testParse->stringsAt(1));
+	EXPECT_EQ(";", testParse->stringsAt(2));
+	EXPECT_EQ("ls", testParse->stringsAt(3));
+	EXPECT_EQ("-a", testParse->stringsAt(4));
+}
 
 TEST(expressionTestTrue, BasicEvaluate) {
 	const char* exArr[3];
