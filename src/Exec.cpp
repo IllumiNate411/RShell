@@ -4,6 +4,7 @@
 
 
 bool Exec::execute() {
-	return true;
+	rhs->execute();
+	return lhs->execute();
 }
 
