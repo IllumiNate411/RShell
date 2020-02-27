@@ -68,6 +68,7 @@ void parser::parseStrings(string input) {
 				}
 				//accounts for semicolon case and parses the semicolon seperately
 				if (input.at(next - 1) == ';') {
+					//finds out how many closed parentheses we have
 					--parenIter;
 					while (input.at(parenIter - 1) == ')') {
                                         	--parenIter;
