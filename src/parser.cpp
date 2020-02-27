@@ -24,8 +24,9 @@ void parser::parseStrings(string input) {
 
 	char curr;
 	int sz = input.size();
-	int next;
-	bool testFlag = false;
+	int next = 0;
+	int parenIter = 0;
+	unsigned j = 0;
 	
 	for (unsigned i = 0; i < sz; ++i) {
 		char curr = input.at(i);
@@ -40,6 +41,10 @@ void parser::parseStrings(string input) {
 			if (input.find(']' != string::npos)) {
 				parsedStrings.push_back("test");
 			}
+		}
+		//parses parentheses seperately
+		else if (curr == '(' || curr == ')') {
+			parsedStrings.push_back(input.substr(i, 1));
 		} 
 		//ignores comments
 		else if (curr == '#') {
@@ -56,27 +61,67 @@ void parser::parseStrings(string input) {
 			//takes a substring of current position up until next space
 			if (input.find(' ', i) != string::npos) {
 				next = input.find(' ', i);
-				//accounts for a semicolon case and parses the semicolon seperately
+				parenIter = next;
+				//accounts for closed parentheses case and parses them seperately
+				while (input.at(parenIter - 1) == ')') {
+					--parenIter;
+				}
+				//accounts for semicolon case and parses the semicolon seperately
 				if (input.at(next - 1) == ';') {
-					parsedStrings.push_back(input.substr(i, next - i - 1));
-					parsedStrings.push_back(input.substr(next - 1, 1));
+					--parenIter;
+					while (input.at(parenIter - 1) == ')') {
+                                        	--parenIter;
+                                	}	
+					++parenIter;
+
+					parsedStrings.push_back(input.substr(i, parenIter - i - 1));
+
+					for (j = 0; j < next - parenIter; ++j) {
+                                        	parsedStrings.push_back(")");
+                                	}
+
+					parsedStrings.push_back(";");
 					i = next;
 				}
 				else {
-					parsedStrings.push_back(input.substr(i, next - i));
+					parsedStrings.push_back(input.substr(i, parenIter - i));
+					
+					for (j = 0; j < next - parenIter; ++j) {
+                                        	parsedStrings.push_back(")");
+                                	}
 					i = next;
 				}
 			}
 			//in case the last portion to be parsed goes to the end of string
 			else {
+				parenIter = sz - 1;
+				//accounts for parentheses at the end of the input	
+				while (input.at(parenIter) == ')') {
+                                        --parenIter;
+                                }
 				//for semicolon at the end
 				if (input.find(';', i) != string::npos) {
-					parsedStrings.push_back(input.substr(i, sz - 1 - i));
-					parsedStrings.push_back(input.substr(sz - 1, 1));
+					--parenIter;
+                                        while (input.at(parenIter) == ')') {
+                                                --parenIter;
+                                        }
+					++parenIter;
+
+					parsedStrings.push_back(input.substr(i, parenIter - i));
+
+					for (j = 0; j < sz - 1 - parenIter; ++j) {
+                                        	parsedStrings.push_back(")");
+                                	}
 					i = sz - 1;
+
+					parsedStrings.push_back(";");
 				}
 				else {
-					parsedStrings.push_back(input.substr(i, sz - i));
+					parsedStrings.push_back(input.substr(i, parenIter + 1 - i));
+
+					for (j = 0; j < sz - 1 - parenIter; ++j) {
+                                        	parsedStrings.push_back(")");
+                                	}
 					i = sz - 1;
 				}
 			}

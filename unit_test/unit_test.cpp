@@ -9,6 +9,7 @@
 #include "../header/Or.hpp"
 #include "../header/Semicolon.hpp"
 
+//Parser Tests
 TEST(parserTest, ParserBrackets) {
 	string str = "[ -f test/file/path ] && echo \"path exists\"";
 	parser* testParse = new parser();
@@ -61,8 +62,91 @@ TEST(parserTest, ParserTrailingSemicolon) {
 	EXPECT_EQ(";", testParse->stringsAt(2));
 	EXPECT_EQ("ls", testParse->stringsAt(3));
 	EXPECT_EQ("-a", testParse->stringsAt(4));
+	EXPECT_EQ(";", testParse->stringsAt(5));
 }
 
+TEST(parserTest, ParserParenthesesOne) {
+        string str = "(echo hi || echo bye)";
+        parser* testParse = new parser();
+        testParse->parseStrings(str);
+        EXPECT_EQ("(", testParse->stringsAt(0));
+        EXPECT_EQ("echo", testParse->stringsAt(1));
+        EXPECT_EQ("hi", testParse->stringsAt(2));
+        EXPECT_EQ("||", testParse->stringsAt(3));
+        EXPECT_EQ("echo", testParse->stringsAt(4));
+	EXPECT_EQ("bye", testParse->stringsAt(5));
+	EXPECT_EQ(")", testParse->stringsAt(6));
+}
+
+TEST(parserTest, ParserParenthesesTwo) {
+        string str = "(echo A && (echo B || echo C)) && echo D";
+        parser* testParse = new parser();
+        testParse->parseStrings(str);
+        EXPECT_EQ("(", testParse->stringsAt(0));
+        EXPECT_EQ("echo", testParse->stringsAt(1));
+        EXPECT_EQ("A", testParse->stringsAt(2));
+        EXPECT_EQ("&&", testParse->stringsAt(3));
+        EXPECT_EQ("(", testParse->stringsAt(4));
+        EXPECT_EQ("echo", testParse->stringsAt(5));
+        EXPECT_EQ("B", testParse->stringsAt(6));
+	EXPECT_EQ("||", testParse->stringsAt(7));
+	EXPECT_EQ("echo", testParse->stringsAt(8));
+	EXPECT_EQ("C", testParse->stringsAt(9));
+	EXPECT_EQ(")", testParse->stringsAt(10));
+	EXPECT_EQ(")", testParse->stringsAt(11));
+	EXPECT_EQ("&&", testParse->stringsAt(12));
+	EXPECT_EQ("echo", testParse->stringsAt(13));
+	EXPECT_EQ("D", testParse->stringsAt(14));
+}
+
+TEST(parserTest, ParserParenthesesThree) {
+        string str = "((((ls -a; git status); echo hello)));";
+        parser* testParse = new parser();
+        testParse->parseStrings(str);
+        EXPECT_EQ("(", testParse->stringsAt(0));
+        EXPECT_EQ("(", testParse->stringsAt(1));
+        EXPECT_EQ("(", testParse->stringsAt(2));
+        EXPECT_EQ("(", testParse->stringsAt(3));
+        EXPECT_EQ("ls", testParse->stringsAt(4));
+        EXPECT_EQ("-a", testParse->stringsAt(5));
+        EXPECT_EQ(";", testParse->stringsAt(6));
+        EXPECT_EQ("git", testParse->stringsAt(7));
+        EXPECT_EQ("status", testParse->stringsAt(8));
+        EXPECT_EQ(")", testParse->stringsAt(9));
+	EXPECT_EQ(";", testParse->stringsAt(10));
+	EXPECT_EQ("echo", testParse->stringsAt(11));
+	EXPECT_EQ("hello", testParse->stringsAt(12));
+        EXPECT_EQ(")", testParse->stringsAt(13));
+        EXPECT_EQ(")", testParse->stringsAt(14));
+        EXPECT_EQ(")", testParse->stringsAt(15));
+	EXPECT_EQ(";", testParse->stringsAt(16));
+}
+
+TEST(parserTest, ParserParenthesesFour) {
+        string str = "ls; (echo hello; (ls -a; git status); echo goodbye);";
+        parser* testParse = new parser();
+        testParse->parseStrings(str);
+        EXPECT_EQ("ls", testParse->stringsAt(0));
+        EXPECT_EQ(";", testParse->stringsAt(1));
+        EXPECT_EQ("(", testParse->stringsAt(2));
+        EXPECT_EQ("echo", testParse->stringsAt(3));
+        EXPECT_EQ("hello", testParse->stringsAt(4));
+        EXPECT_EQ(";", testParse->stringsAt(5));
+        EXPECT_EQ("(", testParse->stringsAt(6));
+        EXPECT_EQ("ls", testParse->stringsAt(7));
+        EXPECT_EQ("-a", testParse->stringsAt(8));
+        EXPECT_EQ(";", testParse->stringsAt(9));
+        EXPECT_EQ("git", testParse->stringsAt(10));
+        EXPECT_EQ("status", testParse->stringsAt(11));
+        EXPECT_EQ(")", testParse->stringsAt(12));
+        EXPECT_EQ(";", testParse->stringsAt(13));
+        EXPECT_EQ("echo", testParse->stringsAt(14));
+        EXPECT_EQ("goodbye", testParse->stringsAt(15));
+        EXPECT_EQ(")", testParse->stringsAt(16));
+	EXPECT_EQ(";", testParse->stringsAt(17));
+}
+
+//Execute Tests
 TEST(expressionTestTrue, BasicEvaluate) {
 	const char* exArr[3];
 	string str1 = "echo";
