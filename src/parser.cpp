@@ -38,12 +38,12 @@ void parser::parseStrings(string input) {
 		}
 		//looks for brackets that signify test
 		else if (curr == '[') {
-			if (input.find(']' != string::npos)) {
+			if (input.find(']',i) != string::npos) {
 				parsedStrings.push_back("test");
 			}
 		}
 		//parses parentheses seperately
-		else if (curr == '(' || curr == ')') {
+		else if (curr == '(') {
 			parsedStrings.push_back(input.substr(i, 1));
 		} 
 		//ignores comments
@@ -68,6 +68,7 @@ void parser::parseStrings(string input) {
 				}
 				//accounts for semicolon case and parses the semicolon seperately
 				if (input.at(next - 1) == ';') {
+					//finds out how many closed parentheses we have
 					--parenIter;
 					while (input.at(parenIter - 1) == ')') {
                                         	--parenIter;
