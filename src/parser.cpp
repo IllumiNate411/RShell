@@ -136,8 +136,8 @@ void parser::makeObjects() {
         const char* tempArr[5];
 
         for (unsigned i = 0; i < parsedStrings.size(); ++i) {
-                if(parsedStrings.at(i) == "&&" || parsedStrings.at(i) == "||" || parsedStrings.at(i) == ";") {
-			if (i != parsedStrings.size()) {
+                if(parsedStrings.at(i) == "&&" || parsedStrings.at(i) == "||" || parsedStrings.at(i) == ";" || parsedStrings.at(i) == "(" || parsedStrings.at(i) == ")") {
+			if (i != parsedStrings.size() && k != 0) {
 				tempArr[k] = '\0';
 				k = 0;
 				if (strcmp(tempArr[0], "test") == 0) {
@@ -179,7 +179,36 @@ void parser::findConnectorOrder() {
 		else if (curr == ";") {
                         connectorOrder.push_back(";");
                 }
+		else if (curr == "(") {
+			connectorOrder.push_back("(");
+		}
+		else if (curr == ")") {
+			connectorOrder.push_back(")");
+		}
 	}
+}
+
+executable* parser::executep2(unsigned& i) {
+	i++;
+	executable* execTree2 = objects.at(i);
+	for (i; i < objects.size(); ++i) {
+		if (connectorOrder.at(i) == "&&") {
+			execTree2 = new And(execTree2, objects.at(i));
+		}
+		else if (connectorOrder.at(i) == "||") {
+			execTree2 = new Or(execTree2, objects.at(i));
+		}
+		else if (connectorOrder.at(i) == ";") {
+			execTree2 = new Semicolon(execTree2, objects.at(i));
+		}
+		else if (connectorOrder.at(i) == "(") {
+			execTree2 = new Exec(execTree2, executep2(i));
+		}
+		else if (connectorOrder.at(i) == ")") {
+			return execTree2;
+		}
+	}
+	return execTree2;
 }
 
 void parser::executeObjects() {
@@ -199,7 +228,13 @@ void parser::executeObjects() {
 		}
 		else if (connectorOrder.at(i - 1) == ";") {
 			execTree = new Semicolon(execTree, objects.at(i));
-		}		
+		}
+		else if (connectorOrder.at(i - 1) == "(") {
+			execTree = new Exec(execTree, executep2(i));
+		}
+		else if (connectorOrder.at(i - 1) == ")") {
+			execTree = new Exec(execTree, executep2(i));
+		}
 	}
 	execTree->execute();
 	return;

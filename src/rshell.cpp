@@ -8,6 +8,7 @@
 #include "../header/And.hpp"
 #include "../header/Or.hpp"
 #include "../header/Semicolon.hpp"
+#include "../header/exec.hpp"
 
 using namespace std;
 

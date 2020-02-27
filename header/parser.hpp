@@ -7,6 +7,7 @@
 #include "And.hpp"
 #include "Or.hpp"
 #include "Semicolon.hpp"
+#include "exec.hpp"
 
 using namespace std;
 
@@ -16,6 +17,7 @@ class parser {
 		void parseStrings(string);
 		void makeObjects();
 		void findConnectorOrder();
+		executable* executep2(unsigned& i);
 		void executeObjects();
 		string stringsAt(int);
 		string connectorsAt(int);
