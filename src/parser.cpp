@@ -38,17 +38,17 @@ void parser::parseStrings(string input) {
 		}
 		//looks for brackets that signify test
 		else if (curr == '[') {
-			if (input.find(']' != string::npos)) {
+			if (input.find(']') != string::npos) {
 				parsedStrings.push_back("test");
 			}
 		}
 		//parses parentheses seperately
-		else if (curr == '(' || curr == ')') {
+		else if (curr == '(') {
 			parsedStrings.push_back(input.substr(i, 1));
 		} 
 		//ignores comments
 		else if (curr == '#') {
-			i = sz -1;
+			i = sz - 1;
 		}
 		//want to ignore spaces and close brackets
 		else if (curr != ' ' && curr != ']') {
@@ -132,6 +132,7 @@ void parser::parseStrings(string input) {
 
 //goes through input and creates expression objects for each command/argument(s)
 void parser::makeObjects() {
+	//cout << "This is the beginning of makeObjects" << endl;
 	int k = 0;
         const char* tempArr[5];
 

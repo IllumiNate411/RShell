@@ -65,6 +65,16 @@ TEST(parserTest, ParserTrailingSemicolon) {
 	EXPECT_EQ(";", testParse->stringsAt(5));
 }
 
+TEST(parserTest, BasicParentheses) {
+	string str = "(echo A)";
+	parser* testParse = new parser();
+	testParse->parseStrings(str);
+	EXPECT_EQ("(", testParse->stringsAt(0));
+	EXPECT_EQ("echo", testParse->stringsAt(1));
+	EXPECT_EQ("A", testParse->stringsAt(2));
+	EXPECT_EQ(")", testParse->stringsAt(3));
+}
+
 TEST(parserTest, ParserParenthesesOne) {
         string str = "(echo hi || echo bye)";
         parser* testParse = new parser();
