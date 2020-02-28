@@ -8,6 +8,8 @@ class executable {
 
 		virtual bool execute() = 0;
 		virtual void display() { };
+		virtual void setLHS(executable *) { };
+		virtual void setRHS(executable *) { };
 };
 
 #endif

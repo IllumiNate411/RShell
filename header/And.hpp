@@ -10,11 +10,25 @@ class And : public executable {
 		executable* rhs;
 	public:
 		
+		And() : executable() {
+			lhs = NULL;
+			rhs = NULL;
+		}
+
 		And(executable*  A, executable* B) : executable() {
 			lhs = A;
 			rhs = B;
 		}
 
+		void setLHS(executable* A) {
+			lhs = A;
+		}
+		void setRHS(executable* B) {
+			rhs = B;
+		}
+		string getType() {
+			return "&&";
+		}
 		bool execute();
 };
 

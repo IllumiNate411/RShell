@@ -5,15 +5,20 @@
 #include <iostream>
 #include <sstream>
 
-#include "exacutable.hpp"
+#include "executable.hpp"
 
 class Paren : public executable{
 	protected:
-		executable* objA
+		string parenType;
 	public:
-		Paren(sting input):executable(){
-			ObjA = input;
+		Paren(string input):executable(){
+			parenType = input;
 		}
+
+                string getType() {
+                        return parenType;
+                }
+
 
 		bool execute();
 };

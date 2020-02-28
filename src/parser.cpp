@@ -3,7 +3,7 @@
 #include <vector>
 #include <stdlib.h>
 #include <string.h>
-
+#include <bits/stdc++.h>
 #include "../header/parser.hpp"
 
 using namespace std;
@@ -114,8 +114,6 @@ void parser::parseStrings(string input) {
                                         	parsedStrings.push_back(")");
                                 	}
 					i = sz - 1;
-
-					parsedStrings.push_back(";");
 				}
 				else {
 					parsedStrings.push_back(input.substr(i, parenIter + 1 - i));
@@ -222,4 +220,11 @@ const char* parser::StringToCString(string str) {
 
         return cstring;
 }
-
+/*
+bool isOperator(string c) {
+	if (c == "&&" || c == "||" || c == ";" || c == ")" || c == "(") {
+		return true;
+	}
+	return false;
+}
+*/
