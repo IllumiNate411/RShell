@@ -15,12 +15,14 @@ class Paren : public executable{
 			parenType = input;
 		}
 
-                string getType() {
+                virtual string getType() {
                         return parenType;
                 }
 
-
-		bool execute();
+		bool execute() {
+			cout << "ERROR: execute is being called on a parenthesis" << endl;
+			return false;
+		}
 };
 
 #endif

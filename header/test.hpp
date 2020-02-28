@@ -25,5 +25,9 @@ class test : public executable {
 				return false;
 			}
 		}
+
+		virtual string getType() {
+			return "exp";
+		}
 };
 #endif

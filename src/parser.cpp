@@ -12,9 +12,11 @@ parser::~parser() {
 	while(!parsedStrings.empty()) {
 		parsedStrings.pop_back();
 	}
+	/*
 	while(!connectorOrder.empty()) {
                 connectorOrder.pop_back();
         }
+	*/
 	while(!objects.empty()) {
                 objects.pop_back();
         }
@@ -146,7 +148,20 @@ void parser::makeObjects() {
 				else {
                         		objects.push_back(new expression(tempArr));
                 		}
+
+				if (parsedStrings.at(i) == "&&") {
+					objects.push_back(new And());
+				}
+				else if (parsedStrings.at(i) == "||") {
+                                        objects.push_back(new Or());
+                                }
+				else if (parsedStrings.at(i) == ";") {
+                                        objects.push_back(new Semicolon());
+                                }
 			}
+		}
+		else if (parsedStrings.at(i) == ")" || parsedStrings.at(i) == "(") {
+			objects.push_back(new Paren(parsedStrings.at(i)));
 		}
                 else {
                         tempArr[k] = StringToCString(parsedStrings.at(i));
@@ -165,6 +180,7 @@ void parser::makeObjects() {
 	return;
 }
 
+/*
 //goes through input and finds what connectors we need to use and in what order
 void parser::findConnectorOrder() {
 	string curr;
@@ -181,15 +197,25 @@ void parser::findConnectorOrder() {
                 }
 	}
 }
+*/
 
 void parser::executeObjects() {
 	if (objects.size() == 1) {
 		objects.at(0)->execute();
 		return;
 	}
-
 	executable* execTree = objects.at(0);
 
+	for (unsigned i = 1; i < objects.size(); ++i) {
+		if (objects.at(i)->getType() == "&&" || objects.at(i)->getType() == "||" || objects.at(i)->getType() == ";") {
+			objects.at(i)->setLHS(execTree);
+			objects.at(i)->setRHS(objects.at(i + 1));
+			execTree = objects.at(i);
+			++i;
+		}	
+	}	
+
+	/*
 	for (unsigned i = 1; i < objects.size(); ++i) {
 		if (connectorOrder.at(i - 1) == "&&") {
 			execTree = new And(execTree, objects.at(i));
@@ -201,6 +227,8 @@ void parser::executeObjects() {
 			execTree = new Semicolon(execTree, objects.at(i));
 		}		
 	}
+	*/
+
 	execTree->execute();
 	return;
 }
@@ -208,11 +236,6 @@ void parser::executeObjects() {
 string parser::stringsAt(int index) {
 	return parsedStrings.at(index);
 }
-
-string parser::connectorsAt(int index) {
-	return connectorOrder.at(index);
-}
-
 
 const char* parser::StringToCString(string str) {
         const char* cstring;

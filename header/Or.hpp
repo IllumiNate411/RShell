@@ -25,7 +25,7 @@ class Or : public executable {
                 void setRHS(executable* B) {
                         rhs = B;
                 }
-                string getType() {
+                virtual string getType() {
                         return "||";
                 }
 

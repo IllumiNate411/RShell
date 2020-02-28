@@ -25,7 +25,7 @@ int main() {
 		commands = new parser();
 	
                 commands->parseStrings(userStr);
-                commands->findConnectorOrder();
+                //commands->findConnectorOrder();
                 commands->makeObjects();
                 commands->executeObjects();
 
