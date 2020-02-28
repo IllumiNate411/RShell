@@ -80,6 +80,10 @@ class expression : public executable {
         		return;
 		}
 
+                string getType() {
+                        return "exp";
+                }
+
 };
 
 #endif
