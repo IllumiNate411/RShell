@@ -5,17 +5,24 @@
 #include <iostream>
 #include <sstream>
 
-#include "exacutable.hpp"
+#include "executable.hpp"
 
 class Paren : public executable{
 	protected:
-		executable* objA
+		string parenType;
 	public:
-		Paren(sting input):executable(){
-			ObjA = input;
+		Paren(string input):executable(){
+			parenType = input;
 		}
 
-		bool execute();
+                virtual string getType() {
+                        return parenType;
+                }
+
+		bool execute() {
+			cout << "ERROR: execute is being called on a parenthesis" << endl;
+			return false;
+		}
 };
 
 #endif

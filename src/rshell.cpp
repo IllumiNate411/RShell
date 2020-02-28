@@ -8,6 +8,7 @@
 #include "../header/And.hpp"
 #include "../header/Or.hpp"
 #include "../header/Semicolon.hpp"
+#include "../header/Paren.hpp"
 
 using namespace std;
 
@@ -24,7 +25,7 @@ int main() {
 		commands = new parser();
 	
                 commands->parseStrings(userStr);
-                commands->findConnectorOrder();
+                //commands->findConnectorOrder();
                 commands->makeObjects();
                 commands->executeObjects();
 

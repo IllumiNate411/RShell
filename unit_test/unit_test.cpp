@@ -8,6 +8,7 @@
 #include "../header/And.hpp"
 #include "../header/Or.hpp"
 #include "../header/Semicolon.hpp"
+#include "../header/Paren.hpp"
 
 //Parser Tests
 TEST(parserTest, ParserBrackets) {
@@ -62,7 +63,16 @@ TEST(parserTest, ParserTrailingSemicolon) {
 	EXPECT_EQ(";", testParse->stringsAt(2));
 	EXPECT_EQ("ls", testParse->stringsAt(3));
 	EXPECT_EQ("-a", testParse->stringsAt(4));
-	EXPECT_EQ(";", testParse->stringsAt(5));
+}
+
+TEST(parserTest, BasicParentheses) {
+	string str = "(echo A)";
+	parser* testParse = new parser();
+	testParse->parseStrings(str);
+	EXPECT_EQ("(", testParse->stringsAt(0));
+	EXPECT_EQ("echo", testParse->stringsAt(1));
+	EXPECT_EQ("A", testParse->stringsAt(2));
+	EXPECT_EQ(")", testParse->stringsAt(3));
 }
 
 TEST(parserTest, ParserParenthesesOne) {
@@ -119,7 +129,6 @@ TEST(parserTest, ParserParenthesesThree) {
         EXPECT_EQ(")", testParse->stringsAt(13));
         EXPECT_EQ(")", testParse->stringsAt(14));
         EXPECT_EQ(")", testParse->stringsAt(15));
-	EXPECT_EQ(";", testParse->stringsAt(16));
 }
 
 TEST(parserTest, ParserParenthesesFour) {
@@ -143,7 +152,6 @@ TEST(parserTest, ParserParenthesesFour) {
         EXPECT_EQ("echo", testParse->stringsAt(14));
         EXPECT_EQ("goodbye", testParse->stringsAt(15));
         EXPECT_EQ(")", testParse->stringsAt(16));
-	EXPECT_EQ(";", testParse->stringsAt(17));
 }
 
 //Execute Tests

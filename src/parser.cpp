@@ -3,7 +3,7 @@
 #include <vector>
 #include <stdlib.h>
 #include <string.h>
-
+#include <bits/stdc++.h>
 #include "../header/parser.hpp"
 
 using namespace std;
@@ -12,9 +12,11 @@ parser::~parser() {
 	while(!parsedStrings.empty()) {
 		parsedStrings.pop_back();
 	}
+	/*
 	while(!connectorOrder.empty()) {
                 connectorOrder.pop_back();
         }
+	*/
 	while(!objects.empty()) {
                 objects.pop_back();
         }
@@ -48,7 +50,7 @@ void parser::parseStrings(string input) {
 		} 
 		//ignores comments
 		else if (curr == '#') {
-			i = sz -1;
+			i = sz - 1;
 		}
 		//want to ignore spaces and close brackets
 		else if (curr != ' ' && curr != ']') {
@@ -114,8 +116,6 @@ void parser::parseStrings(string input) {
                                         	parsedStrings.push_back(")");
                                 	}
 					i = sz - 1;
-
-					parsedStrings.push_back(";");
 				}
 				else {
 					parsedStrings.push_back(input.substr(i, parenIter + 1 - i));
@@ -133,6 +133,7 @@ void parser::parseStrings(string input) {
 
 //goes through input and creates expression objects for each command/argument(s)
 void parser::makeObjects() {
+	//cout << "This is the beginning of makeObjects" << endl;
 	int k = 0;
         const char* tempArr[5];
 
@@ -147,7 +148,20 @@ void parser::makeObjects() {
 				else {
                         		objects.push_back(new expression(tempArr));
                 		}
+
+				if (parsedStrings.at(i) == "&&") {
+					objects.push_back(new And());
+				}
+				else if (parsedStrings.at(i) == "||") {
+                                        objects.push_back(new Or());
+                                }
+				else if (parsedStrings.at(i) == ";") {
+                                        objects.push_back(new Semicolon());
+                                }
 			}
+		}
+		else if (parsedStrings.at(i) == ")" || parsedStrings.at(i) == "(") {
+			objects.push_back(new Paren(parsedStrings.at(i)));
 		}
                 else {
                         tempArr[k] = StringToCString(parsedStrings.at(i));
@@ -166,6 +180,7 @@ void parser::makeObjects() {
 	return;
 }
 
+/*
 //goes through input and finds what connectors we need to use and in what order
 void parser::findConnectorOrder() {
 	string curr;
@@ -182,15 +197,25 @@ void parser::findConnectorOrder() {
                 }
 	}
 }
+*/
 
 void parser::executeObjects() {
 	if (objects.size() == 1) {
 		objects.at(0)->execute();
 		return;
 	}
-
 	executable* execTree = objects.at(0);
 
+	for (unsigned i = 1; i < objects.size(); ++i) {
+		if (objects.at(i)->getType() == "&&" || objects.at(i)->getType() == "||" || objects.at(i)->getType() == ";") {
+			objects.at(i)->setLHS(execTree);
+			objects.at(i)->setRHS(objects.at(i + 1));
+			execTree = objects.at(i);
+			++i;
+		}	
+	}	
+
+	/*
 	for (unsigned i = 1; i < objects.size(); ++i) {
 		if (connectorOrder.at(i - 1) == "&&") {
 			execTree = new And(execTree, objects.at(i));
@@ -202,6 +227,8 @@ void parser::executeObjects() {
 			execTree = new Semicolon(execTree, objects.at(i));
 		}		
 	}
+	*/
+
 	execTree->execute();
 	return;
 }
@@ -210,15 +237,17 @@ string parser::stringsAt(int index) {
 	return parsedStrings.at(index);
 }
 
-string parser::connectorsAt(int index) {
-	return connectorOrder.at(index);
-}
-
-
 const char* parser::StringToCString(string str) {
         const char* cstring;
         cstring = str.c_str();
 
         return cstring;
 }
-
+/*
+bool isOperator(string c) {
+	if (c == "&&" || c == "||" || c == ";" || c == ")" || c == "(") {
+		return true;
+	}
+	return false;
+}
+*/
