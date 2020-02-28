@@ -16,15 +16,15 @@ class parser {
 		~parser();
 		void parseStrings(string);
 		void makeObjects();
-		//void findConnectorOrder();
+		vector <executable* > infixToPostfix();
 		void executeObjects();
 		string stringsAt(int);
 	protected:
 		vector <string> parsedStrings;
-        	//vector <string> connectorOrder;
         	vector <executable* > objects;
 
 		const char* StringToCString(string);
+		bool isOperator(string);
 };
 
 #endif

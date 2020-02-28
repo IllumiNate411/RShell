@@ -16,6 +16,9 @@ class test : public executable {
 		 }
 
 		virtual bool execute() {
+			cout << argList[0] << endl;
+			cout << argList[1] << endl;
+			cout << argList[2] << endl;
 			if (true) {
 				cout << "(TRUE)" << endl;
 				return true;

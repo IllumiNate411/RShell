@@ -12,11 +12,6 @@ parser::~parser() {
 	while(!parsedStrings.empty()) {
 		parsedStrings.pop_back();
 	}
-	/*
-	while(!connectorOrder.empty()) {
-                connectorOrder.pop_back();
-        }
-	*/
 	while(!objects.empty()) {
                 objects.pop_back();
         }
@@ -131,14 +126,14 @@ void parser::parseStrings(string input) {
 	return;
 }
 
-//goes through input and creates expression objects for each command/argument(s)
+//goes through input and creates expression objects for each expression, connector, and parenthesis
 void parser::makeObjects() {
 	//cout << "This is the beginning of makeObjects" << endl;
 	int k = 0;
         const char* tempArr[5];
 
         for (unsigned i = 0; i < parsedStrings.size(); ++i) {
-                if(parsedStrings.at(i) == "&&" || parsedStrings.at(i) == "||" || parsedStrings.at(i) == ";") {
+                if(isOperator(parsedStrings.at(i))) {
 			if (i != parsedStrings.size()) {
 				tempArr[k] = '\0';
 				k = 0;
@@ -180,24 +175,38 @@ void parser::makeObjects() {
 	return;
 }
 
-/*
-//goes through input and finds what connectors we need to use and in what order
-void parser::findConnectorOrder() {
-	string curr;
-	for (unsigned i = 0; i < parsedStrings.size(); ++i) {
-		curr = parsedStrings.at(i);
-		if (curr == "&&") {
-			connectorOrder.push_back("&&");
+vector<executable* > parser::infixToPostfix() {
+	objects.insert(objects.begin(), new Paren("("));
+	objects.push_back(new Paren(")"));
+
+	int sz = objects.size();
+	stack<executable* > objectStack;
+	vector <executable* > postfixVector;
+
+	for (int i = 0; i < sz; ++i) {
+		if (objects.at(i)->getType() == "exp") {
+			postfixVector.push_back(objects.at(i));
 		}
-		else if (curr == "||") {
-                        connectorOrder.push_back("||");
-                }
-		else if (curr == ";") {
-                        connectorOrder.push_back(";");
-                }
+		else if (objects.at(i)->getType() == "(") {
+			objectStack.push(objects.at(i));
+		}
+		else if (objects.at(i)->getType() == ")") {
+			while (objectStack.top()->getType() != "(") {
+				postfixVector.push_back(objectStack.top());
+				objectStack.pop();
+			}
+		objectStack.pop();
+		}
+		else {
+			while (isOperator(objectStack.top()->getType()) ) {
+				postfixVector.push_back(objectStack.top());
+				objectStack.pop();
+			}
+			objectStack.push(objects.at(i));
+		}
 	}
+	return postfixVector;
 }
-*/
 
 void parser::executeObjects() {
 	if (objects.size() == 1) {
@@ -207,27 +216,13 @@ void parser::executeObjects() {
 	executable* execTree = objects.at(0);
 
 	for (unsigned i = 1; i < objects.size(); ++i) {
-		if (objects.at(i)->getType() == "&&" || objects.at(i)->getType() == "||" || objects.at(i)->getType() == ";") {
+		if (isOperator(objects.at(i)->getType())) {
 			objects.at(i)->setLHS(execTree);
 			objects.at(i)->setRHS(objects.at(i + 1));
 			execTree = objects.at(i);
 			++i;
 		}	
 	}	
-
-	/*
-	for (unsigned i = 1; i < objects.size(); ++i) {
-		if (connectorOrder.at(i - 1) == "&&") {
-			execTree = new And(execTree, objects.at(i));
-		}
-		else if (connectorOrder.at(i - 1) == "||") {
-			execTree = new Or(execTree, objects.at(i));
-		}
-		else if (connectorOrder.at(i - 1) == ";") {
-			execTree = new Semicolon(execTree, objects.at(i));
-		}		
-	}
-	*/
 
 	execTree->execute();
 	return;
@@ -243,11 +238,11 @@ const char* parser::StringToCString(string str) {
 
         return cstring;
 }
-/*
-bool isOperator(string c) {
-	if (c == "&&" || c == "||" || c == ";" || c == ")" || c == "(") {
+
+bool parser::isOperator(string c) {
+
+	if (c == "&&" || c == "||" || c == ";") {
 		return true;
 	}
 	return false;
 }
-*/
