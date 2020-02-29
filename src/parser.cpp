@@ -236,6 +236,7 @@ void parser::infixToPrefix() {
 	int sz = objects.size();
 	vector <executable* > temp;
 	vector <executable* > temp2;
+
 	for (int i = sz - 1; i > -1; --i) {
 		temp.push_back(objects.at(i));
 	}
@@ -244,17 +245,16 @@ void parser::infixToPrefix() {
 	for (unsigned i = 0; i < sz; ++i) {
 		if (temp.at(i)->getType() == "(") {
 			temp.at(i)->setType(")");
-			++i;
 		}
 		else if (temp.at(i)->getType() == ")") {
 			temp.at(i)->setType("(");
-			++i;
 		}
 	}
 
 	temp = infixToPostfix(temp);
 
 	for (int i = temp.size() - 1; i > -1; --i) {
+		//cout << temp.at(i)->getType() << endl;
                 temp2.push_back(temp.at(i));
         }
 
