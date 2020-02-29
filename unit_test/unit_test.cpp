@@ -312,7 +312,7 @@ TEST(testTest, Testing) {
 	testParse->parseStrings(str);
 	testParse->makeObjects();
 	testParse->infixToPrefix();
-	EXPECT_EQ(true, testParse->);
+	EXPECT_EQ(true, testParse->executeObjects());
 }
 
 int main(int argc, char **argv) {
