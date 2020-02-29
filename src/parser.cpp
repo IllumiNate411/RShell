@@ -177,41 +177,62 @@ void parser::makeObjects() {
 }
 
 vector<executable* > parser::infixToPostfix(vector <executable* > infix) {
-	
+	//cout << "POSTFIX" << endl;
 	infix.insert(infix.begin(), new Paren("("));
 	infix.push_back(new Paren(")"));
 
 	int sz = infix.size();
 	stack<executable* > stack;
 	vector <executable* > postfix;
-
+	//cout << "LOOP BEGIN" << endl;
 	for (int i = 0; i < sz; ++i) {
+		//cout << infix.at(i)->getType() << endl;
 		if (infix.at(i)->getType() == "exp") {
+			//cout << "EXP1" << endl;
 			postfix.push_back(infix.at(i));
+			//cout << "EXP2" << endl;
 		}
 		else if (infix.at(i)->getType() == "(") {
+			//cout << "OPENPAREN1" << endl;
 			stack.push(infix.at(i));
+			//cout << "OPENPAREN2" << endl;
 		}
 		else if (infix.at(i)->getType() == ")") {
-				while (stack.top()->getType() != "(") {
+				//cout << "CLOSEDPAREN1" << endl;
+				while (!stack.empty() && stack.top()->getType() != "(") {
+					//cout << "CLOSEDPAREN2" << endl;
 					postfix.push_back(stack.top());
+					//cout << "CLOSEDPAREN3" << endl;
+					stack.pop();
+					//cout << "CLOSEDPAREN4" << endl;
+				}
+				//cout << "CLOSEDPAREN5" << endl;
+				if (!stack.empty()) {
 					stack.pop();
 				}
-				stack.pop();
 		}
 		else {
-			while (isOperator(stack.top()->getType())) {
-				postfix.push_back(stack.top());
-				stack.pop();
+			if (!stack.empty()) {
+				while (isOperator(stack.top()->getType())) {
+					//cout << "OP1" << endl;
+					postfix.push_back(stack.top());
+					//cout << "OP2" << endl;
+					stack.pop();
+					//cout << "OP3" << endl;
+				}
 			}
+			//cout << "OP4" << endl;
 			stack.push(infix.at(i));
+			//cout << "OP5" << endl;
 		}
 	}
+	//cout << "LOOP END" << endl;
 
 	return postfix;
 }
 
 void parser::infixToPrefix() {
+	//cout << "PREFIX" << endl;
 	int sz = objects.size();
 	vector <executable* > temp;
 	vector <executable* > temp2;
@@ -243,6 +264,7 @@ void parser::infixToPrefix() {
 
 
 bool parser::executeObjects() {
+	//cout << "EXECUTE" << endl;
 	/*
 	if (objects.size() == 1) {
 		objects.at(0)->execute();
