@@ -26,6 +26,7 @@ int main() {
 	
                 commands->parseStrings(userStr);
                 commands->makeObjects();
+		commands->infixToPrefix();
                 commands->executeObjects();
 
 		delete commands;

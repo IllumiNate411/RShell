@@ -36,7 +36,9 @@ void parser::parseStrings(string input) {
 		//looks for brackets that signify test
 		else if (curr == '[') {
 			if (input.find(']',i) != string::npos) {
+				input.erase(input.find(']',i), 1);
 				parsedStrings.push_back("test");
+				sz = sz - 1;
 			}
 		}
 		//parses parentheses seperately
@@ -123,7 +125,6 @@ void parser::parseStrings(string input) {
 			}
 		}
 	}
-	return;
 }
 
 //goes through input and creates expression objects for each expression, connector, and parenthesis
@@ -241,6 +242,7 @@ void parser::infixToPrefix() {
 
 
 void parser::executeObjects() {
+	/*
 	if (objects.size() == 1) {
 		objects.at(0)->execute();
 		return;
@@ -258,6 +260,29 @@ void parser::executeObjects() {
 
 	execTree->execute();
 	return;
+	*/
+
+	stack<executable* > stack;
+	executable* temp1;
+	executable* temp2;
+
+	for (int i = objects.size() - 1; i >= 0; --i) {
+		if (!isOperator(objects.at(i)->getType())) {
+			stack.push(objects.at(i));
+		}
+		else {
+			temp1 = stack.top();
+			stack.pop();
+			temp2 = stack.top();
+			stack.pop();
+			
+			objects.at(i)->setLHS(temp1);
+			objects.at(i)->setRHS(temp2);
+			stack.push(objects.at(i));
+		}
+	}
+
+	stack.top()->execute();
 }
 
 string parser::stringsAt(int index) {
