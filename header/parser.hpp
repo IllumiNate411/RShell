@@ -18,7 +18,7 @@ class parser {
 		void makeObjects();
 		vector <executable* > infixToPostfix(vector <executable* >);
 		void infixToPrefix();
-		void executeObjects();
+		bool executeObjects();
 		string stringsAt(int);
 		string objectsAt(int);
 	protected:
