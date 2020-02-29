@@ -133,7 +133,7 @@ void parser::makeObjects() {
         const char* tempArr[5];
 
         for (unsigned i = 0; i < parsedStrings.size(); ++i) {
-                if(isOperator(parsedStrings.at(i))) {
+      if(isOperator(parsedStrings.at(i))) {
 			if (i != parsedStrings.size()) {
 				tempArr[k] = '\0';
 				k = 0;
