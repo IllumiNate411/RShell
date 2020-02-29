@@ -177,6 +177,7 @@ void parser::makeObjects() {
 }
 
 vector<executable* > parser::infixToPostfix(vector <executable* > infix) {
+	
 	infix.insert(infix.begin(), new Paren("("));
 	infix.push_back(new Paren(")"));
 
@@ -241,7 +242,7 @@ void parser::infixToPrefix() {
 }
 
 
-void parser::executeObjects() {
+bool parser::executeObjects() {
 	/*
 	if (objects.size() == 1) {
 		objects.at(0)->execute();
@@ -282,7 +283,7 @@ void parser::executeObjects() {
 		}
 	}
 
-	stack.top()->execute();
+	return stack.top()->execute();
 }
 
 string parser::stringsAt(int index) {
