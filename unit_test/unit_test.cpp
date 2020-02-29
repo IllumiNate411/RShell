@@ -154,32 +154,32 @@ TEST(parserTest, ParserParenthesesFour) {
         EXPECT_EQ(")", testParse->stringsAt(16));
 }
 
-TEST(parserTest, infixTopPostfixTest1) {
+TEST(parserTest, infixTopPrefixTest1) {
 	string str = "echo A && echo B";
 	parser* testParse = new parser();
 	testParse->parseStrings(str);
 	testParse->makeObjects();
 	testParse->infixToPrefix();
-	EXPECT_EQ("exp", testParse->objectsAt(0));
+	EXPECT_EQ("&&", testParse->objectsAt(0));
 	EXPECT_EQ("exp", testParse->objectsAt(1));
 	EXPECT_EQ("exp", testParse->objectsAt(2));
 }
-/*
-TEST(parserTest, infixTopPostfixTest2) {
+
+TEST(parserTest, infixTopPrefixTest2) {
 	string str = "echo A || (echo B && echo C); echo D";
         parser* testParse = new parser();
         testParse->parseStrings(str);
         testParse->makeObjects();
-        vector<executable* > postfix = testParse->infixToPostfix();
-        EXPECT_EQ("exp", postfix.at(0)->getType());
-        EXPECT_EQ("exp", postfix.at(1)->getType());
-        EXPECT_EQ("&&", postfix.at(2)->getType());
-	EXPECT_EQ("exp", postfix.at(3)->getType());
-        EXPECT_EQ("||", postfix.at(4)->getType());
-	EXPECT_EQ("exp", postfix.at(5)->getType());
-        EXPECT_EQ(";", postfix.at(6)->getType());
+	testParse->infixToPrefix();
+        EXPECT_EQ("||", testParse->objectsAt(0));
+        EXPECT_EQ("exp", testParse->objectsAt(1));
+        EXPECT_EQ(";", testParse->objectsAt(2));
+	EXPECT_EQ("&&", testParse->objectsAt(3));
+        EXPECT_EQ("exp", testParse->objectsAt(4));
+	EXPECT_EQ("exp", testParse->objectsAt(5));
+        EXPECT_EQ("exp", testParse->objectsAt(6));
 }
-*/
+
 //Execute Tests
 TEST(expressionTestTrue, BasicEvaluate) {
 	const char* exArr[3];

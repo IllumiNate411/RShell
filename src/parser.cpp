@@ -185,25 +185,24 @@ vector<executable* > parser::infixToPostfix(vector <executable* > infix) {
 
 	for (int i = 0; i < sz; ++i) {
 		if (infix.at(i)->getType() == "exp") {
-			cout << "HI" << endl;
 			postfix.push_back(infix.at(i));
 		}
 		else if (infix.at(i)->getType() == "(") {
 			stack.push(infix.at(i));
 		}
 		else if (infix.at(i)->getType() == ")") {
-			while (stack.top()->getType() != "(") {
-				postfix.push_back(stack.top());
+				while (stack.top()->getType() != "(") {
+					postfix.push_back(stack.top());
+					stack.pop();
+				}
 				stack.pop();
-			}
-			stack.pop();
 		}
 		else {
-			while (isOperator(stack.top()->getType()) ) {
+			while (isOperator(stack.top()->getType())) {
 				postfix.push_back(stack.top());
 				stack.pop();
 			}
-			stack.push(objects.at(i));
+			stack.push(infix.at(i));
 		}
 	}
 
@@ -231,7 +230,8 @@ void parser::infixToPrefix() {
 	}
 
 	temp = infixToPostfix(temp);
-	for (int i = sz - 1; i > -1; --i) {
+
+	for (int i = temp.size() - 1; i > -1; --i) {
                 temp2.push_back(temp.at(i));
         }
 
