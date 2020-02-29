@@ -19,6 +19,10 @@ class Paren : public executable{
                         return parenType;
                 }
 
+		void setType(string input) {
+			parenType = input;
+		}
+
 		bool execute() {
 			cout << "ERROR: execute is being called on a parenthesis" << endl;
 			return false;

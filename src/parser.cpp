@@ -175,38 +175,70 @@ void parser::makeObjects() {
 	return;
 }
 
-vector<executable* > parser::infixToPostfix() {
-	objects.insert(objects.begin(), new Paren("("));
-	objects.push_back(new Paren(")"));
+vector<executable* > parser::infixToPostfix(vector <executable* > infix) {
+	infix.insert(infix.begin(), new Paren("("));
+	infix.push_back(new Paren(")"));
 
-	int sz = objects.size();
-	stack<executable* > objectStack;
-	vector <executable* > postfixVector;
+	int sz = infix.size();
+	stack<executable* > stack;
+	vector <executable* > postfix;
 
 	for (int i = 0; i < sz; ++i) {
-		if (objects.at(i)->getType() == "exp") {
-			postfixVector.push_back(objects.at(i));
+		if (infix.at(i)->getType() == "exp") {
+			cout << "HI" << endl;
+			postfix.push_back(infix.at(i));
 		}
-		else if (objects.at(i)->getType() == "(") {
-			objectStack.push(objects.at(i));
+		else if (infix.at(i)->getType() == "(") {
+			stack.push(infix.at(i));
 		}
-		else if (objects.at(i)->getType() == ")") {
-			while (objectStack.top()->getType() != "(") {
-				postfixVector.push_back(objectStack.top());
-				objectStack.pop();
+		else if (infix.at(i)->getType() == ")") {
+			while (stack.top()->getType() != "(") {
+				postfix.push_back(stack.top());
+				stack.pop();
 			}
-		objectStack.pop();
+			stack.pop();
 		}
 		else {
-			while (isOperator(objectStack.top()->getType()) ) {
-				postfixVector.push_back(objectStack.top());
-				objectStack.pop();
+			while (isOperator(stack.top()->getType()) ) {
+				postfix.push_back(stack.top());
+				stack.pop();
 			}
-			objectStack.push(objects.at(i));
+			stack.push(objects.at(i));
 		}
 	}
-	return postfixVector;
+
+	return postfix;
 }
+
+void parser::infixToPrefix() {
+	int sz = objects.size();
+	vector <executable* > temp;
+	vector <executable* > temp2;
+	for (int i = sz - 1; i > -1; --i) {
+		temp.push_back(objects.at(i));
+	}
+	//reverse(objects.begin(), objects.end());
+
+	for (unsigned i = 0; i < sz; ++i) {
+		if (temp.at(i)->getType() == "(") {
+			temp.at(i)->setType(")");
+			++i;
+		}
+		else if (temp.at(i)->getType() == ")") {
+			temp.at(i)->setType("(");
+			++i;
+		}
+	}
+
+	temp = infixToPostfix(temp);
+	for (int i = sz - 1; i > -1; --i) {
+                temp2.push_back(temp.at(i));
+        }
+
+	objects = temp2;
+	//reverse(objects.begin(), objects.end());
+}
+
 
 void parser::executeObjects() {
 	if (objects.size() == 1) {
@@ -230,6 +262,10 @@ void parser::executeObjects() {
 
 string parser::stringsAt(int index) {
 	return parsedStrings.at(index);
+}
+
+string parser::objectsAt(int index) {
+	return objects.at(index)->getType();
 }
 
 const char* parser::StringToCString(string str) {

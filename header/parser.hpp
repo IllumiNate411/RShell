@@ -16,9 +16,11 @@ class parser {
 		~parser();
 		void parseStrings(string);
 		void makeObjects();
-		vector <executable* > infixToPostfix();
+		vector <executable* > infixToPostfix(vector <executable* >);
+		void infixToPrefix();
 		void executeObjects();
 		string stringsAt(int);
+		string objectsAt(int);
 	protected:
 		vector <string> parsedStrings;
         	vector <executable* > objects;
