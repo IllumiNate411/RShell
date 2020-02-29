@@ -36,7 +36,9 @@ void parser::parseStrings(string input) {
 		//looks for brackets that signify test
 		else if (curr == '[') {
 			if (input.find(']',i) != string::npos) {
+				input.erase(input.find(']',i), 1);
 				parsedStrings.push_back("test");
+				sz = sz - 1;
 			}
 		}
 		//parses parentheses seperately
@@ -123,7 +125,6 @@ void parser::parseStrings(string input) {
 			}
 		}
 	}
-	return;
 }
 
 //goes through input and creates expression objects for each expression, connector, and parenthesis
@@ -185,25 +186,24 @@ vector<executable* > parser::infixToPostfix(vector <executable* > infix) {
 
 	for (int i = 0; i < sz; ++i) {
 		if (infix.at(i)->getType() == "exp") {
-			cout << "HI" << endl;
 			postfix.push_back(infix.at(i));
 		}
 		else if (infix.at(i)->getType() == "(") {
 			stack.push(infix.at(i));
 		}
 		else if (infix.at(i)->getType() == ")") {
-			while (stack.top()->getType() != "(") {
-				postfix.push_back(stack.top());
+				while (stack.top()->getType() != "(") {
+					postfix.push_back(stack.top());
+					stack.pop();
+				}
 				stack.pop();
-			}
-			stack.pop();
 		}
 		else {
-			while (isOperator(stack.top()->getType()) ) {
+			while (isOperator(stack.top()->getType())) {
 				postfix.push_back(stack.top());
 				stack.pop();
 			}
-			stack.push(objects.at(i));
+			stack.push(infix.at(i));
 		}
 	}
 
@@ -231,7 +231,8 @@ void parser::infixToPrefix() {
 	}
 
 	temp = infixToPostfix(temp);
-	for (int i = sz - 1; i > -1; --i) {
+
+	for (int i = temp.size() - 1; i > -1; --i) {
                 temp2.push_back(temp.at(i));
         }
 
@@ -241,6 +242,7 @@ void parser::infixToPrefix() {
 
 
 void parser::executeObjects() {
+	/*
 	if (objects.size() == 1) {
 		objects.at(0)->execute();
 		return;
@@ -258,6 +260,29 @@ void parser::executeObjects() {
 
 	execTree->execute();
 	return;
+	*/
+
+	stack<executable* > stack;
+	executable* temp1;
+	executable* temp2;
+
+	for (int i = objects.size() - 1; i >= 0; --i) {
+		if (!isOperator(objects.at(i)->getType())) {
+			stack.push(objects.at(i));
+		}
+		else {
+			temp1 = stack.top();
+			stack.pop();
+			temp2 = stack.top();
+			stack.pop();
+			
+			objects.at(i)->setLHS(temp1);
+			objects.at(i)->setRHS(temp2);
+			stack.push(objects.at(i));
+		}
+	}
+
+	stack.top()->execute();
 }
 
 string parser::stringsAt(int index) {
