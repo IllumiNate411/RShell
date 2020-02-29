@@ -307,14 +307,12 @@ TEST(semicolonTest, BasicEvaluate) {
 }
 
 TEST(testTest, Testing) {
-	const char* exArr[4];
-	string str1 = "test";
-	string str3 = "src";
-	exArr[0] = str1.c_str();
-	exArr[2] = str3.c_str();
-	exArr[3] = "\0";
-	executable* ex1 = new expression(exArr);
-	EXPECT_EQ(true, ex1->execute());
+	string str = "test -d src";
+	parser* testParse = new parser();
+	testParse->parseStrings(str);
+	testParse->makeObjects();
+	testParse->infixToPrefix();
+	EXPECT_EQ(true, testParse->);
 }
 
 int main(int argc, char **argv) {
