@@ -4,6 +4,11 @@
 #include "executable.hpp"
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
 class test : public executable {
 	protected:
@@ -19,14 +24,18 @@ class test : public executable {
 
 		virtual bool execute() {
 			struct stat sb;
-			if(argList[1] != "-d") {
-				//if(S_ISREG(sb.st_mode) != 0) {
-					 
-				//}
-			}
-			else {
-				cout << "(FALSE)" << endl;
-				return false;
+			int status = stat(argList[2], &sb);
+			switch(sb.st_mode & S_IFMT){
+				case S_IFDIR: if(strcmp(argList[1],"-d")==0 || strcmp(argList[1], "-e") == 0){
+						      printf("(True)\n");
+					      } 
+					      else if(strcmp(argList[1], "-f")==0)
+					      {
+						      cout<<"(False)\n";
+					      } 
+					      break;
+				case S_IFREG: if(strcmp(argList[1], "-f")==0 || strcmp(argList[1], "-e")==0)printf("(True)\n"); else{cout<<"(False)\n";} break;
+				default: printf("(False)\n"); break;
 			}
 		}
 
