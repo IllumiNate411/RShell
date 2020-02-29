@@ -360,6 +360,42 @@ TEST(testTest, Testing6) {
 	EXPECT_EQ(false, testParse->executeObjects());
 }
 
+TEST(ParenTesting, Testing) {
+	string str = "(echo A && echo B)";
+	parser* testParse = new parser();
+	testParse->parseStrings(str);
+	testParse->makeObjects();
+	testParse->infixToPrefix();
+	EXPECT_EQ(true, testParse->executeObjects());
+}
+
+TEST(ParenTesting, Testing2) {
+	string str = "echo A && (echo B || echo C)";
+	parser* testParse = new parser();
+	testParse->parseStrings(str);
+	testParse->makeObjects();
+	testParse->infixToPrefix();
+	EXPECT_EQ(true, testParse->executeObjects());
+}
+
+TEST(ParenTesting, Testing3) {
+	string str = "echo A || (echo B && echo C)";
+	parser* testParse = new parser();
+	testParse->parseStrings(str);
+	testParse->makeObjects();
+	testParse->infixToPrefix();
+	EXPECT_EQ(true, testParse->executeObjects());
+}
+
+TEST(ParenTesting, Testing4) {
+	string str = "echo A || (echo B || (echo C && echo D))";
+	parser* testParse = new parser();
+	testParse->parseStrings(str);
+	testParse->makeObjects();
+	testParse->infixToPrefix();
+	EXPECT_EQ(true, testParse->executeObjects());
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

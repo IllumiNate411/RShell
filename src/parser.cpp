@@ -244,11 +244,11 @@ void parser::infixToPrefix() {
 	for (unsigned i = 0; i < sz; ++i) {
 		if (temp.at(i)->getType() == "(") {
 			temp.at(i)->setType(")");
-			++i;
+			i++;
 		}
 		else if (temp.at(i)->getType() == ")") {
 			temp.at(i)->setType("(");
-			++i;
+			i++;
 		}
 	}
 
