@@ -28,14 +28,16 @@ class test : public executable {
 			switch(sb.st_mode & S_IFMT){
 				case S_IFDIR: if(strcmp(argList[1],"-d")==0 || strcmp(argList[1], "-e") == 0){
 						      printf("(True)\n");
+						      return true;
 					      } 
 					      else if(strcmp(argList[1], "-f")==0)
 					      {
 						      cout<<"(False)\n";
+						      return false;
 					      } 
 					      break;
-				case S_IFREG: if(strcmp(argList[1], "-f")==0 || strcmp(argList[1], "-e")==0)printf("(True)\n"); else{cout<<"(False)\n";} break;
-				default: printf("(False)\n"); break;
+				case S_IFREG: if(strcmp(argList[1], "-f")==0 || strcmp(argList[1], "-e")==0){printf("(True)\n"); return true; } else{cout<<"(False)\n"; return false;} break;
+				default: printf("(False)\n"); return false; break;
 			}
 		}
 
