@@ -315,6 +315,51 @@ TEST(testTest, Testing) {
 	EXPECT_EQ(true, testParse->executeObjects());
 }
 
+TEST(testTest, Testing2) {
+	string str = "test src";
+	parser* testParse = new parser();
+	testParse->parseStrings(str);
+	testParse->makeObjects();
+	testParse->infixToPrefix();
+	EXPECT_EQ(true, testParse->executeObjects());
+}
+
+TEST(testTest, Testing3) {
+	string str = "test -f src";
+	parser* testParse = new parser();
+	testParse->parseStrings(str);
+	testParse->makeObjects();
+	testParse->infixToPrefix();
+	EXPECT_EQ(false, testParse->executeObjects());
+}
+
+TEST(testTest, Testing4) {
+	string str = "test -f src/rshell.cpp";
+	parser* testParse = new parser();
+	testParse->parseStrings(str);
+	testParse->makeObjects();
+	testParse->infixToPrefix();
+	EXPECT_EQ(true, testParse->executeObjects());
+}
+
+TEST(testTest, Testing5) {
+	string str = "[ -d src ]";
+	parser* testParse = new parser();
+	testParse->parseStrings(str);
+	testParse->makeObjects();
+	testParse->infixToPrefix();
+	EXPECT_EQ(true, testParse->executeObjects());
+}
+
+TEST(testTest, Testing6) {
+	string str = "test -d src/rshell.cpp";
+	parser* testParse = new parser();
+	testParse->parseStrings(str);
+	testParse->makeObjects();
+	testParse->infixToPrefix();
+	EXPECT_EQ(false, testParse->executeObjects());
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
