@@ -173,9 +173,9 @@ TEST(parserTest, infixTopPrefixTest2) {
         testParse->parseStrings(str);
         testParse->makeObjects();
 	testParse->infixToPrefix();
-        EXPECT_EQ("||", testParse->objectsAt(0));
-        EXPECT_EQ("exp", testParse->objectsAt(1));
-        EXPECT_EQ(";", testParse->objectsAt(2));
+        EXPECT_EQ(";", testParse->objectsAt(0));
+        EXPECT_EQ("||", testParse->objectsAt(1));
+        EXPECT_EQ("exp", testParse->objectsAt(2));
 	EXPECT_EQ("&&", testParse->objectsAt(3));
         EXPECT_EQ("exp", testParse->objectsAt(4));
 	EXPECT_EQ("exp", testParse->objectsAt(5));

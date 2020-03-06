@@ -182,6 +182,7 @@ vector<executable* > parser::infixToPostfix(vector <executable* > infix) {
 	infix.push_back(new Paren(")"));
 
 	int sz = infix.size();
+	executable* temp;
 	stack<executable* > stack;
 	vector <executable* > postfix;
 	//cout << "LOOP BEGIN" << endl;
@@ -200,8 +201,9 @@ vector<executable* > parser::infixToPostfix(vector <executable* > infix) {
 		else if (infix.at(i)->getType() == ")") {
 				//cout << "CLOSEDPAREN1" << endl;
 				while (!stack.empty() && stack.top()->getType() != "(") {
+					temp = stack.top();
 					//cout << "CLOSEDPAREN2" << endl;
-					postfix.push_back(stack.top());
+					postfix.push_back(temp);
 					//cout << "CLOSEDPAREN3" << endl;
 					stack.pop();
 					//cout << "CLOSEDPAREN4" << endl;
@@ -212,19 +214,27 @@ vector<executable* > parser::infixToPostfix(vector <executable* > infix) {
 				}
 		}
 		else {
-			if (!stack.empty()) {
-				while (isOperator(stack.top()->getType())) {
-					//cout << "OP1" << endl;
-					postfix.push_back(stack.top());
-					//cout << "OP2" << endl;
-					stack.pop();
-					//cout << "OP3" << endl;
+			/*
+			while (!stck.empty() && isOperator(stack.top()->getType())) {
+				temp = stack.top();
+				//cout << "OP1" << endl;
+				postfix.push_back(temp);
+				//cout << "OP2" << endl;
+				stack.pop();
+				//cout << "OP3" << endl;
 				}
-			}
+			*/
+
 			//cout << "OP4" << endl;
 			stack.push(infix.at(i));
 			//cout << "OP5" << endl;
 		}
+	}
+
+	while (!stack.empty()) {
+		temp = stack.top();
+		postfix.push_back(temp);
+		stack.pop();
 	}
 	//cout << "LOOP END" << endl;
 
@@ -240,7 +250,6 @@ void parser::infixToPrefix() {
 	for (int i = sz - 1; i > -1; --i) {
 		temp.push_back(objects.at(i));
 	}
-	//reverse(objects.begin(), objects.end());
 
 	for (unsigned i = 0; i < sz; ++i) {
 		if (temp.at(i)->getType() == "(") {
@@ -261,7 +270,6 @@ void parser::infixToPrefix() {
         }
 
 	objects = temp2;
-	//reverse(objects.begin(), objects.end());
 }
 
 
