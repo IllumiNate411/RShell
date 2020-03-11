@@ -9,10 +9,8 @@
 using namespace std;
 
 parser::~parser() {
-	while(!parsedStrings.empty()) {
-		parsedStrings.pop_back();
-	}
 	while(!objects.empty()) {
+		delete objects.back();
                 objects.pop_back();
         }
 }
@@ -134,7 +132,7 @@ void parser::makeObjects() {
         const char* tempArr[5];
 
         for (unsigned i = 0; i < parsedStrings.size(); ++i) {
-      if(isOperator(parsedStrings.at(i))) {
+      		if(isOperator(parsedStrings.at(i))) {
 			if (i != parsedStrings.size()) {
 				tempArr[k] = '\0';
 				k = 0;
@@ -227,7 +225,7 @@ vector<executable* > parser::infixToPostfix(vector <executable* > infix) {
 		}
 		else {
 			/*
-			while (!stck.empty() && isOperator(stack.top()->getType())) {
+			while (!stack.empty() && isOperator(stack.top()->getType())) {
 				temp = stack.top();
 				//cout << "OP1" << endl;
 				postfix.push_back(temp);

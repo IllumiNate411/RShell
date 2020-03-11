@@ -20,7 +20,11 @@ class test : public executable {
 			for (unsigned i = 0; i < 5; ++i) {
 				argList[i] = input[i];
 			}
-		 }
+		}
+
+		~test() {
+			delete [] argList;
+		}
 
 		virtual bool execute() {
 			struct stat sb;

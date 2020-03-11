@@ -25,6 +25,10 @@ class expression : public executable {
 			}
 		 }
 
+		~expression() {
+			delete [] argList;
+		}
+
 		virtual bool execute() {
 			
 			if (strcmp(argList[0], "exit") == 0) {
