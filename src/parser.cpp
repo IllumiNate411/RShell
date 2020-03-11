@@ -142,8 +142,8 @@ void parser::makeObjects() {
 					objects.push_back(new test(tempArr));
 				}
 				else {
-                        		objects.push_back(new expression(tempArr));
-                		}
+                                        objects.push_back(new expression(tempArr));
+                                }
 
 				if (parsedStrings.at(i) == "&&") {
 					objects.push_back(new And());
@@ -154,6 +154,18 @@ void parser::makeObjects() {
 				else if (parsedStrings.at(i) == ";") {
                                         objects.push_back(new Semicolon());
                                 }
+				else if (parsedStrings.at(i) == "<") {
+					cout << "MAKE INPUT REDIRECTION OBJECT" << endl;
+					//objects.push_back(new InRedirect());
+				}
+				else if (parsedStrings.at(i) == ">" || parsedStrings.at(i) == ">>") {
+					cout << "MAKE OUTPUT REDIRECTION OBJECT" << endl;
+					//objects.push_back(new OutRedirect(parsedStrings.at(i)));
+				}
+				else if (parsedStrings.at(i) == "|") {
+					cout << "MAKE PIPE OBJECT" << endl;
+					//objects.push_back(new Pipe());
+				}
 			}
 		}
 		else if (parsedStrings.at(i) == ")" || parsedStrings.at(i) == "(") {
@@ -178,8 +190,8 @@ void parser::makeObjects() {
 
 vector<executable* > parser::infixToPostfix(vector <executable* > infix) {
 	//cout << "POSTFIX" << endl;
-	infix.insert(infix.begin(), new Paren("("));
-	infix.push_back(new Paren(")"));
+	//infix.insert(infix.begin(), new Paren("("));
+	//infix.push_back(new Paren(")"));
 
 	int sz = infix.size();
 	executable* temp;
@@ -200,7 +212,7 @@ vector<executable* > parser::infixToPostfix(vector <executable* > infix) {
 		}
 		else if (infix.at(i)->getType() == ")") {
 				//cout << "CLOSEDPAREN1" << endl;
-				while (!stack.empty() && stack.top()->getType() != "(") {
+				while (!stack.empty() && (stack.top()->getType() != "(")) {
 					temp = stack.top();
 					//cout << "CLOSEDPAREN2" << endl;
 					postfix.push_back(temp);
@@ -233,7 +245,9 @@ vector<executable* > parser::infixToPostfix(vector <executable* > infix) {
 
 	while (!stack.empty()) {
 		temp = stack.top();
-		postfix.push_back(temp);
+		if ((temp->getType()) != "(" && (temp->getType() != ")")) {
+			postfix.push_back(temp);
+		}
 		stack.pop();
 	}
 	//cout << "LOOP END" << endl;
@@ -274,27 +288,6 @@ void parser::infixToPrefix() {
 
 
 bool parser::executeObjects() {
-	//cout << "EXECUTE" << endl;
-	/*
-	if (objects.size() == 1) {
-		objects.at(0)->execute();
-		return;
-	}
-	executable* execTree = objects.at(0);
-
-	for (unsigned i = 1; i < objects.size(); ++i) {
-		if (isOperator(objects.at(i)->getType())) {
-			objects.at(i)->setLHS(execTree);
-			objects.at(i)->setRHS(objects.at(i + 1));
-			execTree = objects.at(i);
-			++i;
-		}	
-	}	
-
-	execTree->execute();
-	return;
-	*/
-
 	stack<executable* > stack;
 	executable* temp1;
 	executable* temp2;
