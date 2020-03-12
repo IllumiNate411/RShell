@@ -4,7 +4,7 @@
 #include <iostream>
 #include "executable.hpp"
 
-class InRedirector : public executable {
+class OutRedirector : public executable {
         protected:
                 executable* lhs;
                 executable* rhs;

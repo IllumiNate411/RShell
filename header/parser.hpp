@@ -8,6 +8,9 @@
 #include "Or.hpp"
 #include "Semicolon.hpp"
 #include "Paren.hpp"
+#include "InRedirector.hpp"
+#include "OutRedirector.hpp"
+#include "Pipe.hpp"
 
 using namespace std;
 

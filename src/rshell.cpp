@@ -9,6 +9,9 @@
 #include "../header/Or.hpp"
 #include "../header/Semicolon.hpp"
 #include "../header/Paren.hpp"
+#include "../header/InRedirector.hpp"
+#include "../header/OutRedirector.hpp"
+#include "../header/Pipe.hpp"
 
 using namespace std;
 

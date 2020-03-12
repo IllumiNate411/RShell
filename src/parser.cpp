@@ -154,15 +154,15 @@ void parser::makeObjects() {
                                 }
 				else if (parsedStrings.at(i) == "<") {
 					cout << "MAKE INPUT REDIRECTION OBJECT" << endl;
-					//objects.push_back(new InRedirect());
+					objects.push_back(new InRedirector());
 				}
 				else if (parsedStrings.at(i) == ">" || parsedStrings.at(i) == ">>") {
 					cout << "MAKE OUTPUT REDIRECTION OBJECT" << endl;
-					//objects.push_back(new OutRedirect(parsedStrings.at(i)));
+					objects.push_back(new OutRedirector(parsedStrings.at(i)));
 				}
 				else if (parsedStrings.at(i) == "|") {
 					cout << "MAKE PIPE OBJECT" << endl;
-					//objects.push_back(new Pipe());
+					objects.push_back(new Pipe());
 				}
 			}
 		}
@@ -326,7 +326,7 @@ const char* parser::StringToCString(string str) {
 
 bool parser::isOperator(string c) {
 
-	if (c == "&&" || c == "||" || c == ";") {
+	if (c == "&&" || c == "||" || c == ";" || c == "<" || c == ">" || c == ">>" || c == "|") {
 		return true;
 	}
 	return false;
