@@ -153,11 +153,9 @@ void parser::makeObjects() {
                                         objects.push_back(new Semicolon());
                                 }
 				else if (parsedStrings.at(i) == "<") {
-					cout << "MAKE INPUT REDIRECTION OBJECT" << endl;
 					objects.push_back(new InRedirector());
 				}
 				else if (parsedStrings.at(i) == ">" || parsedStrings.at(i) == ">>") {
-					cout << "MAKE OUTPUT REDIRECTION OBJECT" << endl;
 					objects.push_back(new OutRedirector(parsedStrings.at(i)));
 				}
 				else if (parsedStrings.at(i) == "|") {
@@ -195,30 +193,19 @@ vector<executable* > parser::infixToPostfix(vector <executable* > infix) {
 	executable* temp;
 	stack<executable* > stack;
 	vector <executable* > postfix;
-	//cout << "LOOP BEGIN" << endl;
 	for (int i = 0; i < sz; ++i) {
-		//cout << infix.at(i)->getType() << endl;
 		if (infix.at(i)->getType() == "exp") {
-			//cout << "EXP1" << endl;
 			postfix.push_back(infix.at(i));
-			//cout << "EXP2" << endl;
 		}
 		else if (infix.at(i)->getType() == "(") {
-			//cout << "OPENPAREN1" << endl;
 			stack.push(infix.at(i));
-			//cout << "OPENPAREN2" << endl;
 		}
 		else if (infix.at(i)->getType() == ")") {
-				//cout << "CLOSEDPAREN1" << endl;
 				while (!stack.empty() && (stack.top()->getType() != "(")) {
 					temp = stack.top();
-					//cout << "CLOSEDPAREN2" << endl;
 					postfix.push_back(temp);
-					//cout << "CLOSEDPAREN3" << endl;
 					stack.pop();
-					//cout << "CLOSEDPAREN4" << endl;
 				}
-				//cout << "CLOSEDPAREN5" << endl;
 				if (!stack.empty()) {
 					stack.pop();
 				}
@@ -232,12 +219,10 @@ vector<executable* > parser::infixToPostfix(vector <executable* > infix) {
 				//cout << "OP2" << endl;
 				stack.pop();
 				//cout << "OP3" << endl;
-				}
+			}
 			*/
 
-			//cout << "OP4" << endl;
 			stack.push(infix.at(i));
-			//cout << "OP5" << endl;
 		}
 	}
 
@@ -248,7 +233,6 @@ vector<executable* > parser::infixToPostfix(vector <executable* > infix) {
 		}
 		stack.pop();
 	}
-	//cout << "LOOP END" << endl;
 
 	return postfix;
 }

@@ -88,6 +88,10 @@ class expression : public executable {
                         return "exp";
                 }
 
+		const char* at(int index) {
+			return argList[index];
+		}
+
 };
 
 #endif
