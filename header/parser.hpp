@@ -30,6 +30,7 @@ class parser {
 
 		const char* StringToCString(string);
 		bool isOperator(string);
+		int getPrecedence(string);
 };
 
 #endif

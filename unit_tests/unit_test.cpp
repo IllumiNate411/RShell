@@ -11,6 +11,110 @@
 #include "../header/Semicolon.hpp"
 #include "../header/Paren.hpp"
 #include "../header/test.hpp"
+#include "../header/InRedirector.hpp"
+#include "../header/OutRedirector.hpp"
+#include "../header/Pipe.hpp"
+
+//Assignment 4 Tests
+TEST(InputRedirection, BasicEvaluate) {
+        const char* exArr1[2];
+        const char* exArr2[2];
+        string str1 = "cat";
+        string str2 = "names.txt";
+        exArr1[0] = str1.c_str();
+        exArr1[1] = '\0';
+        exArr2[0] = str2.c_str();
+        exArr2[1] = '\0';
+        executable* ex1 = new expression(exArr1);
+        executable* ex2 = new expression(exArr2);
+        executable* TestEx = new InRedirector(ex1, ex2);
+        EXPECT_EQ(true, TestEx->execute());
+}
+
+TEST(OutputRedirection, BasicEvaluateTruncate) {
+        const char* exArr1[3];
+        const char* exArr2[2];
+        string str1 = "echo";
+	string str2 = "Success!";
+        string str3 = "sample.txt";
+        exArr1[0] = str1.c_str();
+	exArr1[1] = str2.c_str();
+        exArr1[2] = '\0';
+        exArr2[0] = str3.c_str();
+        exArr2[1] = '\0';
+        executable* ex1 = new expression(exArr1);
+        executable* ex2 = new expression(exArr2);
+        executable* TestEx = new OutRedirector(ex1, ex2, ">");
+        EXPECT_EQ(true, TestEx->execute());
+}
+
+TEST(OutputRedirection, BasicEvaluateAppend) {
+        const char* exArr1[3];
+        const char* exArr2[2];
+        string str1 = "echo";
+        string str2 = "See yah!";
+        string str3 = "sample.txt";
+        exArr1[0] = str1.c_str();
+        exArr1[1] = str2.c_str();
+        exArr1[2] = '\0';
+        exArr2[0] = str3.c_str();
+        exArr2[1] = '\0';
+        executable* ex1 = new expression(exArr1);
+        executable* ex2 = new expression(exArr2);
+        executable* TestEx = new OutRedirector(ex1, ex2, ">>");
+        EXPECT_EQ(true, TestEx->execute());
+}
+
+TEST(InputRedirection, VerifyOutput) {
+        const char* exArr1[2];
+        const char* exArr2[2];
+        string str1 = "cat";
+        string str2 = "sample.txt";
+        exArr1[0] = str1.c_str();
+        exArr1[1] = '\0';
+        exArr2[0] = str2.c_str();
+        exArr2[1] = '\0';
+        executable* ex1 = new expression(exArr1);
+        executable* ex2 = new expression(exArr2);
+        executable* TestEx = new InRedirector(ex1, ex2);
+        EXPECT_EQ(true, TestEx->execute());
+}
+
+TEST(InputRedirection, ParserTest) {
+        string str = "cat < names.txt && echo \"^ These guys are epic ^\"";
+        parser* testParse = new parser();
+        testParse->parseStrings(str);
+        testParse->makeObjects();
+        testParse->infixToPrefix();
+        EXPECT_EQ(true, testParse->executeObjects());
+}
+
+TEST(OutputRedirection, ParserTestTruncate) {
+        string str = "(git status > sample.txt && cat < sample.txt) && echo \"^ Sample.txt ^\"";
+        parser* testParse = new parser();
+        testParse->parseStrings(str);
+        testParse->makeObjects();
+        testParse->infixToPrefix();
+        EXPECT_EQ(true, testParse->executeObjects());
+}
+
+TEST(OutputRedirection, ParserTestAppend) {
+        string str = "(cat names.txt >> sample.txt && cat < sample.txt) && echo \"^ Sample.txt ^\"";
+        parser* testParse = new parser();
+        testParse->parseStrings(str);
+        testParse->makeObjects();
+        testParse->infixToPrefix();
+        EXPECT_EQ(true, testParse->executeObjects());
+}
+
+TEST(OutputRedirection, ComplexTest) {
+        string str = "(echo Tanjiro > sample.txt && cat < sample.txt) || (echo Gonpachiro > sample.txt && cat < sample.txt)" ;
+        parser* testParse = new parser();
+        testParse->parseStrings(str);
+        testParse->makeObjects();
+        testParse->infixToPrefix();
+        EXPECT_EQ(true, testParse->executeObjects());
+}
 
 //Parser Tests
 TEST(parserTest, ParserBrackets) {

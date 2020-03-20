@@ -212,13 +212,12 @@ vector<executable* > parser::infixToPostfix(vector <executable* > infix) {
 		}
 		else {
 			/*
-			while (!stack.empty() && isOperator(stack.top()->getType())) {
-				temp = stack.top();
-				//cout << "OP1" << endl;
-				postfix.push_back(temp);
-				//cout << "OP2" << endl;
-				stack.pop();
-				//cout << "OP3" << endl;
+			if (!stack.empty() && isOperator(stack.top()->getType())) {
+				while (!stack.empty() && getPrecedence(stack.top()->getType()) > getPrecedence(infix.at(i)->getType())) {
+					temp = stack.top();
+					postfix.push_back(temp);
+					stack.pop();
+				}
 			}
 			*/
 
@@ -306,6 +305,17 @@ const char* parser::StringToCString(string str) {
         cstring = str.c_str();
 
         return cstring;
+}
+
+int parser::getPrecedence(string c) {
+	if (c == ">" || c == ">>" || c == "|") {
+		return 2;
+	}
+	else if (c == "&&" || c == "||" || c == ";") {
+		return 1;
+	}
+
+	return 0;
 }
 
 bool parser::isOperator(string c) {
