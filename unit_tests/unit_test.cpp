@@ -2,12 +2,119 @@
 #include <iostream>
 #include <string>
 
+
 #include "../header/parser.hpp"
 #include "../header/executable.hpp"
 #include "../header/expression.hpp"
 #include "../header/And.hpp"
 #include "../header/Or.hpp"
 #include "../header/Semicolon.hpp"
+#include "../header/Paren.hpp"
+#include "../header/test.hpp"
+#include "../header/InRedirector.hpp"
+#include "../header/OutRedirector.hpp"
+#include "../header/Pipe.hpp"
+
+//Assignment 4 Tests
+TEST(InputRedirection, BasicEvaluate) {
+        const char* exArr1[2];
+        const char* exArr2[2];
+        string str1 = "cat";
+        string str2 = "names.txt";
+        exArr1[0] = str1.c_str();
+        exArr1[1] = '\0';
+        exArr2[0] = str2.c_str();
+        exArr2[1] = '\0';
+        executable* ex1 = new expression(exArr1);
+        executable* ex2 = new expression(exArr2);
+        executable* TestEx = new InRedirector(ex1, ex2);
+        EXPECT_EQ(true, TestEx->execute());
+}
+
+TEST(OutputRedirection, BasicEvaluateTruncate) {
+        const char* exArr1[3];
+        const char* exArr2[2];
+        string str1 = "echo";
+	string str2 = "Success!";
+        string str3 = "sample.txt";
+        exArr1[0] = str1.c_str();
+	exArr1[1] = str2.c_str();
+        exArr1[2] = '\0';
+        exArr2[0] = str3.c_str();
+        exArr2[1] = '\0';
+        executable* ex1 = new expression(exArr1);
+        executable* ex2 = new expression(exArr2);
+        executable* TestEx = new OutRedirector(ex1, ex2, ">");
+        EXPECT_EQ(true, TestEx->execute());
+}
+
+TEST(OutputRedirection, BasicEvaluateAppend) {
+        const char* exArr1[3];
+        const char* exArr2[2];
+        string str1 = "echo";
+        string str2 = "See yah!";
+        string str3 = "sample.txt";
+        exArr1[0] = str1.c_str();
+        exArr1[1] = str2.c_str();
+        exArr1[2] = '\0';
+        exArr2[0] = str3.c_str();
+        exArr2[1] = '\0';
+        executable* ex1 = new expression(exArr1);
+        executable* ex2 = new expression(exArr2);
+        executable* TestEx = new OutRedirector(ex1, ex2, ">>");
+        EXPECT_EQ(true, TestEx->execute());
+}
+
+TEST(InputRedirection, VerifyOutput) {
+        const char* exArr1[2];
+        const char* exArr2[2];
+        string str1 = "cat";
+        string str2 = "sample.txt";
+        exArr1[0] = str1.c_str();
+        exArr1[1] = '\0';
+        exArr2[0] = str2.c_str();
+        exArr2[1] = '\0';
+        executable* ex1 = new expression(exArr1);
+        executable* ex2 = new expression(exArr2);
+        executable* TestEx = new InRedirector(ex1, ex2);
+        EXPECT_EQ(true, TestEx->execute());
+}
+
+TEST(InputRedirection, ParserTest) {
+        string str = "cat < names.txt && echo \"^ These guys are epic ^\"";
+        parser* testParse = new parser();
+        testParse->parseStrings(str);
+        testParse->makeObjects();
+        testParse->infixToPrefix();
+        EXPECT_EQ(true, testParse->executeObjects());
+}
+
+TEST(OutputRedirection, ParserTestTruncate) {
+        string str = "(git status > sample.txt && cat < sample.txt) && echo \"^ Sample.txt ^\"";
+        parser* testParse = new parser();
+        testParse->parseStrings(str);
+        testParse->makeObjects();
+        testParse->infixToPrefix();
+        EXPECT_EQ(true, testParse->executeObjects());
+}
+
+TEST(OutputRedirection, ParserTestAppend) {
+        string str = "(cat names.txt >> sample.txt && cat < sample.txt) && echo \"^ Sample.txt ^\"";
+        parser* testParse = new parser();
+        testParse->parseStrings(str);
+        testParse->makeObjects();
+        testParse->infixToPrefix();
+        EXPECT_EQ(true, testParse->executeObjects());
+}
+
+TEST(OutputRedirection, ComplexTest) {
+        string str = "(echo Tanjiro > sample.txt && cat < sample.txt) || (echo Gonpachiro > sample.txt && cat < sample.txt)" ;
+        parser* testParse = new parser();
+        testParse->parseStrings(str);
+        testParse->makeObjects();
+        testParse->infixToPrefix();
+        EXPECT_EQ(true, testParse->executeObjects());
+}
 
 //Parser Tests
 TEST(parserTest, ParserBrackets) {
@@ -62,7 +169,16 @@ TEST(parserTest, ParserTrailingSemicolon) {
 	EXPECT_EQ(";", testParse->stringsAt(2));
 	EXPECT_EQ("ls", testParse->stringsAt(3));
 	EXPECT_EQ("-a", testParse->stringsAt(4));
-	EXPECT_EQ(";", testParse->stringsAt(5));
+}
+
+TEST(parserTest, BasicParentheses) {
+	string str = "(echo A)";
+	parser* testParse = new parser();
+	testParse->parseStrings(str);
+	EXPECT_EQ("(", testParse->stringsAt(0));
+	EXPECT_EQ("echo", testParse->stringsAt(1));
+	EXPECT_EQ("A", testParse->stringsAt(2));
+	EXPECT_EQ(")", testParse->stringsAt(3));
 }
 
 TEST(parserTest, ParserParenthesesOne) {
@@ -119,7 +235,6 @@ TEST(parserTest, ParserParenthesesThree) {
         EXPECT_EQ(")", testParse->stringsAt(13));
         EXPECT_EQ(")", testParse->stringsAt(14));
         EXPECT_EQ(")", testParse->stringsAt(15));
-	EXPECT_EQ(";", testParse->stringsAt(16));
 }
 
 TEST(parserTest, ParserParenthesesFour) {
@@ -143,7 +258,32 @@ TEST(parserTest, ParserParenthesesFour) {
         EXPECT_EQ("echo", testParse->stringsAt(14));
         EXPECT_EQ("goodbye", testParse->stringsAt(15));
         EXPECT_EQ(")", testParse->stringsAt(16));
-	EXPECT_EQ(";", testParse->stringsAt(17));
+}
+
+TEST(parserTest, infixTopPrefixTest1) {
+	string str = "echo A && echo B";
+	parser* testParse = new parser();
+	testParse->parseStrings(str);
+	testParse->makeObjects();
+	testParse->infixToPrefix();
+	EXPECT_EQ("&&", testParse->objectsAt(0));
+	EXPECT_EQ("exp", testParse->objectsAt(1));
+	EXPECT_EQ("exp", testParse->objectsAt(2));
+}
+
+TEST(parserTest, infixTopPrefixTest2) {
+	string str = "echo A || (echo B && echo C); echo D";
+        parser* testParse = new parser();
+        testParse->parseStrings(str);
+        testParse->makeObjects();
+	testParse->infixToPrefix();
+        EXPECT_EQ(";", testParse->objectsAt(0));
+        EXPECT_EQ("||", testParse->objectsAt(1));
+        EXPECT_EQ("exp", testParse->objectsAt(2));
+	EXPECT_EQ("&&", testParse->objectsAt(3));
+        EXPECT_EQ("exp", testParse->objectsAt(4));
+	EXPECT_EQ("exp", testParse->objectsAt(5));
+        EXPECT_EQ("exp", testParse->objectsAt(6));
 }
 
 //Execute Tests
@@ -269,6 +409,96 @@ TEST(semicolonTest, BasicEvaluate) {
         executable* ex2 = new expression(exArr2);
         executable* TestSemicolon = new Semicolon(ex1, ex2);
         EXPECT_EQ(true, TestSemicolon->execute());
+}
+
+TEST(testTest, Testing) {
+	string str = "test -d src";
+	parser* testParse = new parser();
+	testParse->parseStrings(str);
+	testParse->makeObjects();
+	testParse->infixToPrefix();
+	EXPECT_EQ(true, testParse->executeObjects());
+}
+
+TEST(testTest, Testing2) {
+	string str = "test src";
+	parser* testParse = new parser();
+	testParse->parseStrings(str);
+	testParse->makeObjects();
+	testParse->infixToPrefix();
+	EXPECT_EQ(true, testParse->executeObjects());
+}
+
+TEST(testTest, Testing3) {
+	string str = "test -f src";
+	parser* testParse = new parser();
+	testParse->parseStrings(str);
+	testParse->makeObjects();
+	testParse->infixToPrefix();
+	EXPECT_EQ(false, testParse->executeObjects());
+}
+
+TEST(testTest, Testing4) {
+	string str = "test -f src/rshell.cpp";
+	parser* testParse = new parser();
+	testParse->parseStrings(str);
+	testParse->makeObjects();
+	testParse->infixToPrefix();
+	EXPECT_EQ(true, testParse->executeObjects());
+}
+
+TEST(testTest, Testing5) {
+	string str = "[ -d src ]";
+	parser* testParse = new parser();
+	testParse->parseStrings(str);
+	testParse->makeObjects();
+	testParse->infixToPrefix();
+	EXPECT_EQ(true, testParse->executeObjects());
+}
+
+TEST(testTest, Testing6) {
+	string str = "test -d src/rshell.cpp";
+	parser* testParse = new parser();
+	testParse->parseStrings(str);
+	testParse->makeObjects();
+	testParse->infixToPrefix();
+	EXPECT_EQ(false, testParse->executeObjects());
+}
+
+TEST(ParenTesting, Testing) {
+	string str = "(echo A && echo B)";
+	parser* testParse = new parser();
+	testParse->parseStrings(str);
+	testParse->makeObjects();
+	testParse->infixToPrefix();
+	EXPECT_EQ(true, testParse->executeObjects());
+}
+
+TEST(ParenTesting, Testing2) {
+	string str = "echo A && (echo B || echo C)";
+	parser* testParse = new parser();
+	testParse->parseStrings(str);
+	testParse->makeObjects();
+	testParse->infixToPrefix();
+	EXPECT_EQ(true, testParse->executeObjects());
+}
+
+TEST(ParenTesting, Testing3) {
+	string str = "echo A || (echo B && echo C)";
+	parser* testParse = new parser();
+	testParse->parseStrings(str);
+	testParse->makeObjects();
+	testParse->infixToPrefix();
+	EXPECT_EQ(true, testParse->executeObjects());
+}
+
+TEST(ParenTesting, Testing4) {
+	string str = "echo A || (echo B || (echo C && echo D))";
+	parser* testParse = new parser();
+	testParse->parseStrings(str);
+	testParse->makeObjects();
+	testParse->infixToPrefix();
+	EXPECT_EQ(true, testParse->executeObjects());
 }
 
 int main(int argc, char **argv) {

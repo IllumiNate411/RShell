@@ -3,19 +3,14 @@
 #include <vector>
 #include <stdlib.h>
 #include <string.h>
-
+#include <bits/stdc++.h>
 #include "../header/parser.hpp"
 
 using namespace std;
 
 parser::~parser() {
-	while(!parsedStrings.empty()) {
-		parsedStrings.pop_back();
-	}
-	while(!connectorOrder.empty()) {
-                connectorOrder.pop_back();
-        }
 	while(!objects.empty()) {
+		delete objects.back();
                 objects.pop_back();
         }
 }
@@ -38,17 +33,19 @@ void parser::parseStrings(string input) {
 		}
 		//looks for brackets that signify test
 		else if (curr == '[') {
-			if (input.find(']' != string::npos)) {
+			if (input.find(']',i) != string::npos) {
+				input.erase(input.find(']',i), 1);
 				parsedStrings.push_back("test");
+				sz = sz - 1;
 			}
 		}
 		//parses parentheses seperately
-		else if (curr == '(' || curr == ')') {
+		else if (curr == '(') {
 			parsedStrings.push_back(input.substr(i, 1));
 		} 
 		//ignores comments
 		else if (curr == '#') {
-			i = sz -1;
+			i = sz - 1;
 		}
 		//want to ignore spaces and close brackets
 		else if (curr != ' ' && curr != ']') {
@@ -68,6 +65,7 @@ void parser::parseStrings(string input) {
 				}
 				//accounts for semicolon case and parses the semicolon seperately
 				if (input.at(next - 1) == ';') {
+					//finds out how many closed parentheses we have
 					--parenIter;
 					while (input.at(parenIter - 1) == ')') {
                                         	--parenIter;
@@ -113,8 +111,6 @@ void parser::parseStrings(string input) {
                                         	parsedStrings.push_back(")");
                                 	}
 					i = sz - 1;
-
-					parsedStrings.push_back(";");
 				}
 				else {
 					parsedStrings.push_back(input.substr(i, parenIter + 1 - i));
@@ -127,26 +123,49 @@ void parser::parseStrings(string input) {
 			}
 		}
 	}
-	return;
 }
 
-//goes through input and creates expression objects for each command/argument(s)
+//goes through input and creates expression objects for each expression, connector, and parenthesis
 void parser::makeObjects() {
+	//cout << "This is the beginning of makeObjects" << endl;
 	int k = 0;
         const char* tempArr[5];
 
         for (unsigned i = 0; i < parsedStrings.size(); ++i) {
-                if(parsedStrings.at(i) == "&&" || parsedStrings.at(i) == "||" || parsedStrings.at(i) == ";" || parsedStrings.at(i) == "(" || parsedStrings.at(i) == ")") {
-			if (i != parsedStrings.size() && k != 0) {
+      		if(isOperator(parsedStrings.at(i))) {
+			if (i != parsedStrings.size()) {
 				tempArr[k] = '\0';
 				k = 0;
 				if (strcmp(tempArr[0], "test") == 0) {
 					objects.push_back(new test(tempArr));
 				}
 				else {
-                        		objects.push_back(new expression(tempArr));
-                		}
+                                        objects.push_back(new expression(tempArr));
+                                }
+
+				if (parsedStrings.at(i) == "&&") {
+					objects.push_back(new And());
+				}
+				else if (parsedStrings.at(i) == "||") {
+                                        objects.push_back(new Or());
+                                }
+				else if (parsedStrings.at(i) == ";") {
+                                        objects.push_back(new Semicolon());
+                                }
+				else if (parsedStrings.at(i) == "<") {
+					objects.push_back(new InRedirector());
+				}
+				else if (parsedStrings.at(i) == ">" || parsedStrings.at(i) == ">>") {
+					objects.push_back(new OutRedirector(parsedStrings.at(i)));
+				}
+				else if (parsedStrings.at(i) == "|") {
+					cout << "MAKE PIPE OBJECT" << endl;
+					objects.push_back(new Pipe());
+				}
 			}
+		}
+		else if (parsedStrings.at(i) == ")" || parsedStrings.at(i) == "(") {
+			objects.push_back(new Paren(parsedStrings.at(i)));
 		}
                 else {
                         tempArr[k] = StringToCString(parsedStrings.at(i));
@@ -165,89 +184,121 @@ void parser::makeObjects() {
 	return;
 }
 
-//goes through input and finds what connectors we need to use and in what order
-void parser::findConnectorOrder() {
-	string curr;
-	for (unsigned i = 0; i < parsedStrings.size(); ++i) {
-		curr = parsedStrings.at(i);
-		if (curr == "&&") {
-			connectorOrder.push_back("&&");
+vector<executable* > parser::infixToPostfix(vector <executable* > infix) {
+	//cout << "POSTFIX" << endl;
+	//infix.insert(infix.begin(), new Paren("("));
+	//infix.push_back(new Paren(")"));
+
+	int sz = infix.size();
+	executable* temp;
+	stack<executable* > stack;
+	vector <executable* > postfix;
+	for (int i = 0; i < sz; ++i) {
+		if (infix.at(i)->getType() == "exp") {
+			postfix.push_back(infix.at(i));
 		}
-		else if (curr == "||") {
-                        connectorOrder.push_back("||");
-                }
-		else if (curr == ";") {
-                        connectorOrder.push_back(";");
-                }
-		else if (curr == "(") {
-			connectorOrder.push_back("(");
+		else if (infix.at(i)->getType() == "(") {
+			stack.push(infix.at(i));
 		}
-		else if (curr == ")") {
-			connectorOrder.push_back(")");
+		else if (infix.at(i)->getType() == ")") {
+				while (!stack.empty() && (stack.top()->getType() != "(")) {
+					temp = stack.top();
+					postfix.push_back(temp);
+					stack.pop();
+				}
+				if (!stack.empty()) {
+					stack.pop();
+				}
+		}
+		else {
+			/*
+			if (!stack.empty() && isOperator(stack.top()->getType())) {
+				while (!stack.empty() && getPrecedence(stack.top()->getType()) > getPrecedence(infix.at(i)->getType())) {
+					temp = stack.top();
+					postfix.push_back(temp);
+					stack.pop();
+				}
+			}
+			*/
+
+			stack.push(infix.at(i));
 		}
 	}
+
+	while (!stack.empty()) {
+		temp = stack.top();
+		if ((temp->getType()) != "(" && (temp->getType() != ")")) {
+			postfix.push_back(temp);
+		}
+		stack.pop();
+	}
+
+	return postfix;
 }
 
-executable* parser::executep2(unsigned& i) {
-	i++;
-	executable* execTree2 = objects.at(i);
-	for (i; i < objects.size(); ++i) {
-		if (connectorOrder.at(i) == "&&") {
-			execTree2 = new And(execTree2, objects.at(i));
+void parser::infixToPrefix() {
+	//cout << "PREFIX" << endl;
+	int sz = objects.size();
+	vector <executable* > temp;
+	vector <executable* > temp2;
+
+	for (int i = sz - 1; i > -1; --i) {
+		temp.push_back(objects.at(i));
+	}
+
+	for (unsigned i = 0; i < sz; ++i) {
+		if (temp.at(i)->getType() == "(") {
+			temp.at(i)->setType(")");
+			i++;
 		}
-		else if (connectorOrder.at(i) == "||") {
-			execTree2 = new Or(execTree2, objects.at(i));
-		}
-		else if (connectorOrder.at(i) == ";") {
-			execTree2 = new Semicolon(execTree2, objects.at(i));
-		}
-		else if (connectorOrder.at(i) == "(") {
-			execTree2 = new Exec(execTree2, executep2(i));
-		}
-		else if (connectorOrder.at(i) == ")") {
-			return execTree2;
+		else if (temp.at(i)->getType() == ")") {
+			temp.at(i)->setType("(");
+			i++;
 		}
 	}
-	return execTree2;
+
+	temp = infixToPostfix(temp);
+
+	for (int i = temp.size() - 1; i > -1; --i) {
+		//cout << temp.at(i)->getType() << endl;
+                temp2.push_back(temp.at(i));
+        }
+
+	objects = temp2;
 }
 
-void parser::executeObjects() {
-	if (objects.size() == 1) {
-		objects.at(0)->execute();
-		return;
+
+bool parser::executeObjects() {
+	stack<executable* > stack;
+	executable* temp1;
+	executable* temp2;
+
+	for (int i = objects.size() - 1; i >= 0; --i) {
+		if (!isOperator(objects.at(i)->getType())) {
+			stack.push(objects.at(i));
+		}
+		else {
+			temp1 = stack.top();
+			stack.pop();
+			temp2 = stack.top();
+			stack.pop();
+			
+			objects.at(i)->setLHS(temp1);
+			objects.at(i)->setRHS(temp2);
+			stack.push(objects.at(i));
+		}
 	}
 
-	executable* execTree = objects.at(0);
-
-	for (unsigned i = 1; i < objects.size(); ++i) {
-		if (connectorOrder.at(i - 1) == "&&") {
-			execTree = new And(execTree, objects.at(i));
-		}
-		else if (connectorOrder.at(i - 1) == "||") {
-			execTree = new Or(execTree, objects.at(i));
-		}
-		else if (connectorOrder.at(i - 1) == ";") {
-			execTree = new Semicolon(execTree, objects.at(i));
-		}
-		else if (connectorOrder.at(i - 1) == "(") {
-			execTree = new Exec(execTree, executep2(i));
-		}
-		else if (connectorOrder.at(i - 1) == ")") {
-			execTree = new Exec(execTree, executep2(i));
-		}
-	}
-	execTree->execute();
-	return;
+	return stack.top()->execute();
 }
 
 string parser::stringsAt(int index) {
 	return parsedStrings.at(index);
 }
 
-string parser::connectorsAt(int index) {
-	return connectorOrder.at(index);
+string parser::objectsAt(int index) {
+	return objects.at(index)->getType();
 }
-
 
 const char* parser::StringToCString(string str) {
         const char* cstring;
@@ -256,3 +307,21 @@ const char* parser::StringToCString(string str) {
         return cstring;
 }
 
+int parser::getPrecedence(string c) {
+	if (c == ">" || c == ">>" || c == "|") {
+		return 2;
+	}
+	else if (c == "&&" || c == "||" || c == ";") {
+		return 1;
+	}
+
+	return 0;
+}
+
+bool parser::isOperator(string c) {
+
+	if (c == "&&" || c == "||" || c == ";" || c == "<" || c == ">" || c == ">>" || c == "|") {
+		return true;
+	}
+	return false;
+}

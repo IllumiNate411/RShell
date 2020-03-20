@@ -8,7 +8,10 @@
 #include "../header/And.hpp"
 #include "../header/Or.hpp"
 #include "../header/Semicolon.hpp"
-#include "../header/exec.hpp"
+#include "../header/Paren.hpp"
+#include "../header/InRedirector.hpp"
+#include "../header/OutRedirector.hpp"
+#include "../header/Pipe.hpp"
 
 using namespace std;
 
@@ -25,8 +28,8 @@ int main() {
 		commands = new parser();
 	
                 commands->parseStrings(userStr);
-                commands->findConnectorOrder();
                 commands->makeObjects();
+		commands->infixToPrefix();
                 commands->executeObjects();
 
 		delete commands;

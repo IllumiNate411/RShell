@@ -25,6 +25,10 @@ class expression : public executable {
 			}
 		 }
 
+		~expression() {
+			delete [] argList;
+		}
+
 		virtual bool execute() {
 			
 			if (strcmp(argList[0], "exit") == 0) {
@@ -36,12 +40,12 @@ class expression : public executable {
 
 			parentID = fork();
         		if (parentID < 0) {
-                		cout << "ERROR: fork to child process has failed" << endl;
+                		perror("ERROR: fork to child process has failed");
           			return false;
         		}
         		else if(parentID == 0) {
                 		if (execvp(argList[0],(char**) argList) < 0) {
-                        		cout << "ERROR: execution failed" << endl;;
+                        		perror("ERROR: execution failed");
 					exit(1);
                 			return false;	
 				}
@@ -58,7 +62,7 @@ class expression : public executable {
 			*/		
 			//cout << "Status Code: " << status << endl;
         		if (status > 0) {
-                		cout << "ERROR: Invalid Command" << endl;
+                		//perror("ERROR: Invalid Command");
          
 				return false;
         		}
@@ -78,6 +82,14 @@ class expression : public executable {
 				++j;
         		}
         		return;
+		}
+
+                string getType() {
+                        return "exp";
+                }
+
+		const char* at(int index) {
+			return argList[index];
 		}
 
 };

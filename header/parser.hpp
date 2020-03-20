@@ -7,7 +7,10 @@
 #include "And.hpp"
 #include "Or.hpp"
 #include "Semicolon.hpp"
-#include "exec.hpp"
+#include "Paren.hpp"
+#include "InRedirector.hpp"
+#include "OutRedirector.hpp"
+#include "Pipe.hpp"
 
 using namespace std;
 
@@ -16,17 +19,18 @@ class parser {
 		~parser();
 		void parseStrings(string);
 		void makeObjects();
-		void findConnectorOrder();
-		executable* executep2(unsigned& i);
-		void executeObjects();
+		vector <executable* > infixToPostfix(vector <executable* >);
+		void infixToPrefix();
+		bool executeObjects();
 		string stringsAt(int);
-		string connectorsAt(int);
+		string objectsAt(int);
 	protected:
 		vector <string> parsedStrings;
-        	vector <string> connectorOrder;
         	vector <executable* > objects;
 
 		const char* StringToCString(string);
+		bool isOperator(string);
+		int getPrecedence(string);
 };
 
 #endif

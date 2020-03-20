@@ -16,15 +16,25 @@ The goal of this program is to create a CLI Shell that can execute programs and 
 
 ## Classes
 
+### Parser
+This class was added in Assignment 3 to clean up rshell and to have everything from parsing the recieved user input, to making and executing vectors of objects all in one convenient location.
 ### Executable
 The base class of this program, acting as an abstract class to hold the pure virtuals and references.
 
 ### expression
 Handles execution of the arguments, and passing of the connecters And, Or, and Semicolon.
 
-### Semicolon, And, Or
-Derived classes from Ececutable, all of which handle their own connecting symbols in the setup.
+### test
+Similar to expression, but is only created when we read in test or brackets that symbolize test. The main difference here is that test has a different execute function that uses stat() instead of execvp() for it's commands.
 
+### Semicolon, And, Or
+Derived classes from Executable, all of which handle their own connecting symbols in the setup. Initially created as empty and filled with expressions on their left and right hand sides later when constructing our executable tree.
+
+### InRedirector, OutRedirector, Pipe
+Additional classes derived from Executable. Allow for the redirection of input and output when dealing with files. These are treated like the above connectors during parse, but function more like their own individual commands when we execute them.
+
+### Parenthesis
+Another derived class from Executable. This one is created mainly so that we can convert our vector of executable objects from infix to postfix and still know where all our parentheses are located.
 ### rshell
 Can generally be thought of as the user input. The part of the program that handles the parsing and delivery of the input.
 
